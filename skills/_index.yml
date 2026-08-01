@@ -1,0 +1,22 @@
+generated: '2026-07-21'
+method: searched
+source: https://github.com/skyfire-xyz/skills (skills/skyfire)
+description: >-
+  Provider-published Skyfire Agent Skill, saved verbatim. Installable with
+  `npx skills add skyfire-xyz/skills`. Ships a SKILL.md router plus an
+  auto-generated consolidated AGENTS.md.
+skills:
+- file: skyfire-skyfire.md
+  name: skyfire
+  description: >-
+    Build buyer and seller agent workflows with Skyfire KYA, PAY, and KYA-PAY
+    tokens — token creation, introspection and charging, seller-service
+    lifecycle, service discovery, Skyfire MCP integration, and enterprise admin.
+  api: https://docs.skyfire.xyz/reference/skyfire-apis
+  source: https://raw.githubusercontent.com/skyfire-xyz/skills/main/skills/skyfire/SKILL.md
+  official: true
+- file: skyfire-AGENTS.md
+  name: skyfire (consolidated AGENTS.md)
+  description: Auto-generated single-file consolidation of the Skyfire skill rules.
+  source: https://raw.githubusercontent.com/skyfire-xyz/skills/main/skills/skyfire/AGENTS.md
+  official: true

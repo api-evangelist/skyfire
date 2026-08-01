@@ -1,0 +1,31 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference/environments
+model: environment-separated
+description: >-
+  Skyfire runs two fully separate environments — Production (real settlement) and
+  Sandbox (test integration without moving real funds). Each has its own
+  dashboard, API base URL, token issuer, and JWKS endpoint. Keys are
+  environment-specific: a Sandbox key only works against Sandbox.
+environments:
+- name: sandbox
+  dashboard: https://app-sandbox.skyfire.xyz
+  api_base: https://api-sandbox.skyfire.xyz
+  token_issuer: https://app-sandbox.skyfire.xyz
+  jwks: https://app-sandbox.skyfire.xyz/.well-known/jwks.json
+  mcp: https://mcp-sandbox.skyfire.xyz/mcp
+  settlement: none (no real funds move)
+- name: production
+  dashboard: https://app.skyfire.xyz
+  api_base: https://api.skyfire.xyz
+  token_issuer: https://app.skyfire.xyz
+  jwks: https://app.skyfire.xyz/.well-known/jwks.json
+  mcp: https://mcp.skyfire.xyz/mcp
+  settlement: live stablecoin settlement
+getting_test_keys: >-
+  Create a Sandbox account in the Sandbox dashboard (app-sandbox.skyfire.xyz) and
+  generate Buyer/Seller agent API keys at the agent-account level.
+notes: >-
+  Skyfire publishes no fixed magic test card numbers or synthetic decline values;
+  the sandbox is a full parallel environment where you fund a test wallet and
+  exercise real token/charge flows without real settlement.

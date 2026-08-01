@@ -1,0 +1,55 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference/api-authentication
+docs: https://docs.skyfire.xyz/reference/api-authentication
+summary:
+  types: [apiKey]
+  api_key_in: [header]
+  api_key_name: skyfire-api-key
+  token_format: JWT (JWS ES256, verified against issuer JWKS)
+schemes:
+- name: SkyfireApiKey
+  type: apiKey
+  in: header
+  parameter: skyfire-api-key
+  description: >-
+    Single header used for every Skyfire REST API request. The value is a
+    role-specific key — Buyer agent, Seller agent, or Enterprise Admin user.
+    Keys are environment-specific (a Sandbox key only works against Sandbox).
+  roles:
+  - role: buyer
+    use: Create tokens; inspect the buyer's own tokens, charges, and wallet.
+  - role: seller
+    use: Manage seller services; charge pay/kya-pay tokens after delivery.
+  - role: enterprise-admin
+    use: Manage organization users (create/list/activate); not token or service ops.
+- name: SkyfirePayId
+  type: apiKey
+  in: header
+  parameter: skyfire-pay-id
+  description: >-
+    Token-passing header a buyer agent presents to a SELLER SERVICE (not the
+    core Skyfire API). Carries a kya, pay, or kya-pay KYAPay token. Skyfire
+    recommends this dedicated header over Authorization to avoid conflicts with
+    existing auth middleware. Sellers validate it against the issuer JWKS.
+token_types:
+- id: kya
+  description: Identity-only (Know Your Agent) token.
+- id: pay
+  description: Payment-only token.
+- id: kya-pay
+  description: Combined identity + payment token.
+verification:
+  method: JWT signature verification against issuer JWKS
+  jwks:
+    production: https://app.skyfire.xyz/.well-known/jwks.json
+    sandbox: https://app-sandbox.skyfire.xyz/.well-known/jwks.json
+  issuer:
+    production: https://app.skyfire.xyz
+    sandbox: https://app-sandbox.skyfire.xyz
+  cache_recommendation: 60 minutes
+troubleshooting:
+- symptom: 401 NOT_AUTHORIZED
+  cause: Key not recognized (typo, invalid, or wrong environment).
+- symptom: 400 BAD_REQUEST
+  cause: Valid key but wrong role for the action (e.g. seller key creating a token).

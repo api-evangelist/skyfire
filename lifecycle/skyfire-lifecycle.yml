@@ -1,0 +1,25 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference (environments, api paths)
+versioning:
+  scheme: uri-path
+  current: v1
+  evidence: All REST endpoints are under /api/v1/ (e.g. POST /api/v1/tokens).
+environments:
+- name: production
+  api_base: https://api.skyfire.xyz
+  dashboard: https://app.skyfire.xyz
+- name: sandbox
+  api_base: https://api-sandbox.skyfire.xyz
+  dashboard: https://app-sandbox.skyfire.xyz
+deprecation:
+  policy_url: null
+  sunset_header: false
+  notes: No documented deprecation policy or RFC 8594 Sunset/Deprecation header support found.
+status_page: null
+status_page_notes: >-
+  No dedicated Skyfire status page was found (skyfire.statuspage.io resolves to a
+  generic Atlassian Statuspage landing, not a configured Skyfire page).
+sla:
+  url: null
+deprecated_operations: []

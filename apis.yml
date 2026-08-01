@@ -1,8 +1,30 @@
 aid: skyfire
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/skyfire.png
 name: Skyfire
-description: Skyfire is a company surfaced as a portfolio company of dcvc, lightspeed-venture-partners,
-  trinity-ventures and added to the API Evangelist network as a stub for enrichment. This profile is a
-  lead awaiting the enrichment pipeline.
+description: >-
+  Skyfire is the open identity and payments layer for AI agents. It lets AI
+  agents securely create accounts, verify a real-world identity (Know Your Agent,
+  KYA), and autonomously pay for digital services using token-based
+  authentication and stablecoin settlement. Developers use Skyfire to monetize
+  APIs, tools, MCP servers, and content directly to agents. The platform issues
+  three signed, interoperable KYAPay token types — kya (identity), pay (payment),
+  and kya-pay (combined) — that buyer agents present to seller services over a
+  simple REST API and a hosted MCP server. Sellers validate and charge tokens,
+  discover services, and manage seller-service lifecycles, while enterprises
+  manage users and agents through admin APIs. Skyfire is backed by DCVC,
+  Lightspeed Venture Partners, and Trinity Ventures.
 url: https://raw.githubusercontent.com/api-evangelist/skyfire/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -14,12 +36,102 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- AI Agents
+- Agent Payments
+- Identity
+- Payments
+- Authentication
+- Stablecoin
+- MCP
+- Agentic Commerce
+- Know Your Agent
+apis:
+- name: Skyfire API
+  description: >-
+    REST API for AI-agent identity and payments. Buyer agents create kya, pay,
+    and kya-pay tokens; seller agents introspect and charge tokens and manage
+    seller services; enterprises manage users. Authenticated with a single
+    skyfire-api-key header (role-specific keys).
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Agent Payments
+  - Identity
+  - Tokens
+  properties:
+  - type: Documentation
+    url: https://docs.skyfire.xyz/docs/developer-documentation
+  - type: APIReference
+    url: https://docs.skyfire.xyz/reference/skyfire-apis
+  - type: Authentication
+    url: authentication/skyfire-authentication.yml
+  - type: MCPServer
+    url: mcp/skyfire-mcp.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: Website
+  url: https://skyfire.xyz
+- type: DeveloperPortal
+  url: https://docs.skyfire.xyz
+- type: Documentation
+  url: https://docs.skyfire.xyz/docs/developer-documentation
+- type: APIReference
+  url: https://docs.skyfire.xyz/reference/skyfire-apis
+- type: GettingStarted
+  url: https://docs.skyfire.xyz/docs/quickstart
+- type: Blog
+  url: https://skyfire.xyz/blog
+- type: SignUp
+  url: https://app.skyfire.xyz
+- type: Login
+  url: https://app.skyfire.xyz
+- type: Support
+  url: mailto:support@skyfire.xyz
+- type: TermsOfService
+  url: https://skyfire.xyz/terms
+- type: PrivacyPolicy
+  url: https://skyfire.xyz/privacy
+- type: GitHubOrganization
+  url: https://github.com/skyfire-xyz
+- type: Authentication
+  url: authentication/skyfire-authentication.yml
+- type: MCPServer
+  url: mcp/skyfire-mcp.yml
+- type: LLMsTxt
+  url: llms/skyfire-llms.txt
+- type: Packages
+  url: packages/skyfire-packages.yml
+- type: SDKs
+  url: packages/skyfire-packages.yml
+- type: WellKnown
+  url: well-known/skyfire-well-known.yml
+- type: ErrorCatalog
+  url: errors/skyfire-error-codes.yml
+- type: Conformance
+  url: conformance/skyfire-conformance.yml
+- type: Lifecycle
+  url: lifecycle/skyfire-lifecycle.yml
+- type: Conventions
+  url: conventions/skyfire-conventions.yml
+- type: Sandbox
+  url: sandbox/skyfire-sandbox.yml
+- type: Components
+  url: components/skyfire-components.yml
+- type: DataModel
+  url: data-model/skyfire-data-model.yml
+- type: DomainSecurity
+  url: security/skyfire-domain-security.yml
+- type: AgentSkill
+  url: skills/skyfire-skyfire.md
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 17
+  pass: local-v1

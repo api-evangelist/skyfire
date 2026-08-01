@@ -1,0 +1,15 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference/skyfire-credits-wallet-embed-sdk
+components:
+- family: Wallet
+  name: Skyfire Credits Wallet Embed SDK
+  kind: embeddable-sdk
+  description: >-
+    Client-side embeddable SDK for surfacing a Skyfire credits wallet inside a
+    host application, letting end users/agents view and fund an agent wallet
+    without leaving the integrating product.
+  docs: https://docs.skyfire.xyz/reference/skyfire-credits-wallet-embed-sdk
+notes: >-
+  Distinct from the server-side client SDKs in packages/. This is a
+  front-end/embeddable surface. Only one embeddable component is documented.

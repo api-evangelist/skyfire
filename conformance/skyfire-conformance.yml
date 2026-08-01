@@ -1,0 +1,40 @@
+generated: '2026-07-21'
+method: searched
+source: >-
+  https://docs.skyfire.xyz/reference (environments, api-authentication,
+  http-error-status-codes) + observed JWKS
+standards:
+- id: jwt-rfc7519
+  conforms: true
+  evidence: KYAPay tokens are signed JWTs carrying structured identity/payment claims.
+- id: jws-rfc7515
+  conforms: true
+  evidence: Tokens are JWS-signed with ES256 (observed in issuer JWKS `alg`).
+- id: jwk-jwks-rfc7517
+  conforms: true
+  evidence: Public verification keys published at issuer /.well-known/jwks.json.
+- id: oauth2-token-exchange-rfc8693
+  conforms: partial
+  evidence: >-
+    KYAPay token exchange is specified in Skyfire's IETF drafts
+    (draft-skyfire-oauth-kyapay-token-exchange); not a core-API OAuth2 flow.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: Errors use a custom {code, message, details} envelope, not application/problem+json.
+- id: oauth2-authorization
+  conforms: false
+  evidence: API auth is a static apiKey header (skyfire-api-key), not OAuth2 authorization flows.
+- id: openid-connect
+  conforms: false
+  evidence: No /.well-known/openid-configuration published.
+ietf_drafts:
+- draft-skyfire-oauth-kyapay-token
+- draft-skyfire-oauth-kyapay-token-exchange
+- draft-skyfire-oauth-using-kyapay-tokens
+- draft-skyfire-oauth-amr-values
+- draft-skyfire-oauth-id-verification
+- draft-skyfire-oauth-aml-methods
+notes: >-
+  No published third-party compliance certification program (SOC 2 / ISO 27001 /
+  PCI / HIPAA / FedRAMP) was found, so no Compliance pointer is emitted. Skyfire
+  is actively standardizing the KYAPay protocol via IETF drafts.

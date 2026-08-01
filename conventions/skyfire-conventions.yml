@@ -1,0 +1,42 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference + https://docs.skyfire.xyz/docs
+authentication:
+  style: apiKey header
+  header: skyfire-api-key
+  role_specific: true          # buyer / seller / enterprise-admin keys
+  token_passing_header: skyfire-pay-id   # buyer -> seller service; carries KYAPay token
+  ref: authentication/skyfire-authentication.yml
+versioning:
+  style: uri-path
+  current: v1
+  base_path: /api/v1
+  ref: lifecycle/skyfire-lifecycle.yml
+error_envelope:
+  shape: '{ code, message, details }'
+  branch_on: code
+  ref: errors/skyfire-error-codes.yml
+idempotency:
+  supported: false
+  notes: No idempotency-key header or documented idempotency contract found in Skyfire's API reference.
+pagination:
+  style: page-based
+  evidence: >-
+    Enterprise user listing (Get Enterprise Users) returns a paginated list;
+    other list endpoints (services, tags) return collections.
+  notes: Detailed pagination parameters are documented per-endpoint in the API reference.
+request_tracing:
+  request_id_header: null
+  notes: No documented request-id/correlation header.
+tokens:
+  types: [kya, pay, kya-pay]
+  format: JWT (JWS ES256)
+  verification: issuer JWKS (/.well-known/jwks.json), cache 60 minutes
+  ref: authentication/skyfire-authentication.yml
+rate_limits:
+  documented: false
+notes: >-
+  Cross-cutting semantics for the Skyfire REST API. Two distinct API-key headers
+  exist: skyfire-api-key authenticates calls TO the Skyfire API, while
+  skyfire-pay-id carries the KYAPay token a buyer agent presents to a seller's
+  own service.

@@ -1,0 +1,34 @@
+generated: '2026-07-21'
+method: searched
+source: live probes of /.well-known/ on Skyfire hosts
+hosts:
+- host: https://app.skyfire.xyz
+  documents:
+  - path: /.well-known/jwks.json          # JWKS public keys for KYAPay JWT verification (production issuer)
+    status: 200
+    file: skyfire-jwks.json
+  - path: /.well-known/security.txt        # RFC 9116
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+- host: https://api.skyfire.xyz
+  documents:
+  - path: /.well-known/jwks.json
+    status: 200
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://app-sandbox.skyfire.xyz
+  documents:
+  - path: /.well-known/jwks.json          # sandbox issuer JWKS
+    status: 200
+notes: >-
+  Skyfire tokens are signed JWTs (JWS ES256). Verification keys are published at
+  the environment issuer's /.well-known/jwks.json. Skyfire recommends caching the
+  JWKS file for 60 minutes. No security.txt, OpenID Connect discovery, or OAuth
+  authorization-server metadata document is published.

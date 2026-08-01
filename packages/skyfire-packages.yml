@@ -1,0 +1,40 @@
+generated: '2026-07-21'
+method: searched
+source: npm registry, github.com/skyfire-xyz, docs.skyfire.xyz
+packages:
+- language: javascript
+  registry: npm
+  name: "@skyfire-xyz/skyfire-sdk"
+  url: https://www.npmjs.com/package/@skyfire-xyz/skyfire-sdk
+  install: npm install @skyfire-xyz/skyfire-sdk
+  official: true
+  description: >-
+    Official Skyfire client SDK for TypeScript/JavaScript agents — create and
+    manage KYA/PAY/KYA-PAY tokens and integrate agent identity and payments.
+- language: python
+  registry: github
+  name: kyapay_a2a
+  url: https://github.com/skyfire-xyz/kyapay_a2a
+  install: pip install git+https://github.com/skyfire-xyz/kyapay_a2a
+  official: true
+  description: Skyfire KYA+PAY payment extension for A2A (agent-to-agent) agents.
+- language: typescript
+  registry: github
+  name: kyapay
+  url: https://github.com/skyfire-xyz/kyapay
+  install: git clone https://github.com/skyfire-xyz/kyapay
+  official: true
+  description: Reference implementation of the open KYAPay protocol (kyapay.org).
+- language: javascript
+  registry: github
+  name: eth-sdk
+  url: https://github.com/skyfire-xyz/eth-sdk
+  install: git clone https://github.com/skyfire-xyz/eth-sdk
+  official: true
+  description: Type-safe, lightweight SDKs for Ethereum smart contracts (settlement rails).
+notes: >-
+  Skyfire's docs advertise REST-callable APIs plus SDKs for Node, Python, and Go
+  for validating and processing agent payments. The npm @skyfire-xyz/skyfire-sdk
+  is the primary published client library; additional first-party libraries live
+  in the github.com/skyfire-xyz org. No PyPI, Maven, NuGet, RubyGems, Packagist,
+  or crates.io packages were found under the Skyfire namespace.

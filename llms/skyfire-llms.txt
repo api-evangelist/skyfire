@@ -1,0 +1,69 @@
+# Skyfire Developer Portal Documentation
+
+> Skyfire is the open identity and payments layer for AI agents. We enable AI agents to securely create accounts, verify identity, and pay for digital services—autonomously. With Skyfire, developers can monetize APIs, tools, and content directly to agents using token-based authentication and stablecoin payments.
+
+## Guides
+- [Introduction to Skyfire](https://docs.skyfire.xyz/docs/introduction-to-skyfire.md): What Skyfire is, the three token types, and how a payment flows end to end.
+- [Quickstart](https://docs.skyfire.xyz/docs/quickstart.md): From signup to your first token: the fastest path for buyers and sellers.
+- [Platform Structure](https://docs.skyfire.xyz/docs/platform-structure.md): How Skyfire is organized: users, agents, wallets, and seller services.
+- [Know Your Agent (KYA)](https://docs.skyfire.xyz/docs/kya.md): Verify a real-world identity and have your agents inherit it, so buyers can access more services and sellers earn trust.
+- [KYAPay Tokens](https://docs.skyfire.xyz/docs/kyapay-tokens.md): A KYAPay token is a signed, interoperable credential that packages agent identity and payment intent into a verifiable envelope.
+- [Common Token Claims](https://docs.skyfire.xyz/docs/common-token-claims.md): The following are claims in common, used within the KYA (Know Your Agent), PAY (Payment), and KYA-PAY (combined Know Your Agent and Payment) Tokens.
+- [KYA Token](https://docs.skyfire.xyz/docs/kya-token.md): KYA and KYAPay tokens contain structured identity claims describing the human principal, the agent, and optionally the agent platform responsible for a request.
+- [Example KYA Token](https://docs.skyfire.xyz/docs/example-kya-token.md)
+- [PAY Token](https://docs.skyfire.xyz/docs/pay-token.md): The following payment related claims are used within PAY and KYAPay type tokens:
+- [Example PAY Token](https://docs.skyfire.xyz/docs/example-pay-token.md)
+- [KYA-PAY Token](https://docs.skyfire.xyz/docs/token-schemas.md)
+- [Payments & Settlement](https://docs.skyfire.xyz/docs/payments-settlement.md): How money moves on Skyfire, from token creation to final settlement.
+- [Token Interaction Flows](https://docs.skyfire.xyz/docs/token-interaction-flows.md)
+- [Buyer Guide](https://docs.skyfire.xyz/docs/buyer-guide.md): Understand what a buyer agent is, from signup through your first paid request.
+- [Funding Your Wallet](https://docs.skyfire.xyz/docs/wallet-funding.md): Adding spending money to your buyer agent account
+- [Using the Skyfire MCP Server](https://docs.skyfire.xyz/docs/using-the-skyfire-mcp-server.md)
+- [Seller Guide](https://docs.skyfire.xyz/docs/seller-guide.md): Understand what a seller agent is and how to publish a service. Everything you need to monetize your APIs, websites, or MCP servers.
+- [Verify and Extract Data from Tokens](https://docs.skyfire.xyz/docs/verify-and-extract-data-from-tokens.md)
+- [Integrating Tokens into Your Services](https://docs.skyfire.xyz/docs/integrating-tokens-into-your-services.md)
+- [API Specs](https://docs.skyfire.xyz/docs/api-specs.md)
+- [MCP Servers](https://docs.skyfire.xyz/docs/mcp-servers.md)
+- [Handling Missing or Invalid Tokens](https://docs.skyfire.xyz/docs/handling-missing-or-invalid-tokens.md)
+- [Security Brief for Sellers and Bot Managers](https://docs.skyfire.xyz/docs/security-brief-for-sellers.md)
+- [Service Discovery](https://docs.skyfire.xyz/docs/service-discovery.md): Making services, tools and agents available for agent discovery
+- [Verified Service Guarantee](https://docs.skyfire.xyz/docs/verified-service-guarantee.md): Building trust in AI Agent payments
+- [Live Implementations](https://docs.skyfire.xyz/docs/live-implementations.md)
+- [Dappier.com](https://docs.skyfire.xyz/docs/dappier-implementation.md): Discovery and Purchase of Real-Time Rights-Cleared Data from Trusted Sources
+- [BuildShip.tools](https://docs.skyfire.xyz/docs/buildship-implementation.md): Paid Company and Competitor Research by an Agent
+- [Apify.com](https://docs.skyfire.xyz/docs/apify-implementation.md): Pay for, and run, Apify Actors from your Agents
+- [Reference Implementations](https://docs.skyfire.xyz/docs/reference-implementations.md)
+- [Smart News Crawler ](https://docs.skyfire.xyz/docs/smart-news-crawler.md): News and Content given End-User Identity
+- [Discovery and Purchase of Premium Financial Data by an Agent](https://docs.skyfire.xyz/docs/agent-data-purchase.md)
+- [Access to Premium Web Content by a Paying Web Crawler](https://docs.skyfire.xyz/docs/crawler-access-protected-content.md)
+
+## API Reference
+- [Environments](https://docs.skyfire.xyz/reference/environments.md): Base URLs, token issuer, and JWKS details for Skyfire's Production and Sandbox environments.
+- [API Authentication](https://docs.skyfire.xyz/reference/api-authentication.md): Which API key to use for Buyer, Seller, and Enterprise requests.
+- [Identity Fields](https://docs.skyfire.xyz/reference/identity-fields.md): The shared set of verified identity fields that sellers require and buyers share, plus the full field reference for individuals and organizations.
+- [HTTP Error Status Codes](https://docs.skyfire.xyz/reference/http-error-status-codes.md): The error response shape, the full list of stable error codes, and how to handle each one.
+- [Create Token](https://docs.skyfire.xyz/reference/create-token.md): Create a `kya`, `pay`, or `kya-pay` token as a buyer agent.
+- [Get Token Charges](https://docs.skyfire.xyz/reference/get-token-charges.md): Get the charges on a `pay` or `kya-pay` token as a buyer agent.
+- [Charge Token](https://docs.skyfire.xyz/reference/charge-token.md): Charge a `pay` or `kya-pay` token as a seller agent or seller service.
+- [Settlement of Payments](https://docs.skyfire.xyz/reference/settlement-of-payments.md)
+- [Get Agent's Services - All](https://docs.skyfire.xyz/reference/get-agents-seller-services-all.md): Get all of the seller agent's services.
+- [Get Agent's Service](https://docs.skyfire.xyz/reference/get-agents-service.md): Get a particular service belonging to the seller agent.
+- [Create Agent's Service](https://docs.skyfire.xyz/reference/create-agents-service.md): Create a seller service that belongs to an agent.
+- [Update Agent's Service](https://docs.skyfire.xyz/reference/update-agents-service.md): Update a seller service that belongs to the agent.
+- [Activate Agent's Service](https://docs.skyfire.xyz/reference/activate-agents-service.md): Activate a seller service belonging to an agent.
+- [Deactivate Agent's Service](https://docs.skyfire.xyz/reference/deactivate-agents-service.md): Deactivate a seller service belonging to an agent.
+- [Get Agent's Wallet Balance](https://docs.skyfire.xyz/reference/get-agents-wallet-balance.md)
+- [Get Agent's Source IP Addresses](https://docs.skyfire.xyz/reference/get-agents-source-ip-addresses.md): Get the IP addresses registered as the sources of the Agent's requests.
+- [Set Agent's Source IP Addresses](https://docs.skyfire.xyz/reference/set-agents-source-ip-addresses.md): Register IP addresses as the sources of the Agent's requests. These will be included in the `aid.source_ips` claim in the `kya` and `kya-pay` tokens created for the Agent.
+- [Get All Service Tags](https://docs.skyfire.xyz/reference/get-all-service-tags.md): Get all the tags by which to search for specific services.
+- [Get All Services](https://docs.skyfire.xyz/reference/get-all-services.md): Get all the approved and active services.
+- [Get Service](https://docs.skyfire.xyz/reference/get-service.md): Get a particular service's details by it's ID.
+- [Get Services by Tags](https://docs.skyfire.xyz/reference/get-services-by-tags.md): Get services matching the given tags.
+- [Get Services by Agent](https://docs.skyfire.xyz/reference/get-services-by-agent.md): Get all the services belonging to a particular agent.
+- [Introspect Token](https://docs.skyfire.xyz/reference/introspect-token.md): As a buyer or seller agent, verify that a token is valid and get the remaining balance.
+- [Create Enterprise User or Enterprise Admin User](https://docs.skyfire.xyz/reference/create-enterprise-user.md): As an Enterprise Admin create an Enterprise User or another Enterprise Admin User. Use your Enterprise Admin User API Key.
+- [Get Enterprise Users](https://docs.skyfire.xyz/reference/get-enterprise-users.md): As an Enterprise Admin retrieve a paginated list of users in the Enterprise. Use your Enterprise Admin User API Key.
+- [Set Enterprise User Personal Data](https://docs.skyfire.xyz/reference/set-enterprise-user-personal-data.md): As an Enterprise Admin set personal data for an Enterprise User. Use your Enterprise Admin User API Key.
+- [Set Enterprise User Status as Active](https://docs.skyfire.xyz/reference/set-enterprise-user-active.md): As an Enterprise Admin activate an Enterprise User. Use your Enterprise Admin User API Key.
+- [Set Enterprise User Status as Inactive](https://docs.skyfire.xyz/reference/set-enterprise-user-inactive.md): As an Enterprise Admin deactivate an Enterprise User. Use your Enterprise Admin User API Key.
+- [Skyfire Credits Wallet Embed SDK](https://docs.skyfire.xyz/reference/skyfire-credits-wallet-embed-sdk.md)

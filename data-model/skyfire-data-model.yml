@@ -1,0 +1,56 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference (API reference) + docs/platform-structure
+description: >-
+  Entity-relationship model derived from Skyfire's documented API reference
+  (no public OpenAPI spec is available; entities and relationships are taken from
+  the documented endpoints and platform-structure guide).
+entities:
+- name: User
+  description: A Skyfire account holder (individual or enterprise member).
+  relationships:
+  - has_many: Agent
+- name: Agent
+  description: A buyer or seller agent that holds API keys and transacts.
+  relationships:
+  - belongs_to: User
+  - has_one: Wallet
+  - has_many: SellerService (via seller agents)
+  - has_many: Token (buyer agents create tokens)
+  - has_many: SourceIP (registered source IP addresses)
+- name: Wallet
+  description: Holds an agent's spendable balance for payments.
+  relationships:
+  - belongs_to: Agent
+- name: Token
+  description: A signed KYAPay credential (kya, pay, or kya-pay).
+  relationships:
+  - belongs_to: Agent (buyer, the creator)
+  - references: SellerService (via sellerServiceId)
+  - has_many: Charge
+- name: Charge
+  description: A charge applied by a seller against a pay/kya-pay token.
+  relationships:
+  - belongs_to: Token
+- name: SellerService
+  description: A monetized service (API, website, or MCP server) published by a seller agent.
+  relationships:
+  - belongs_to: Agent (seller)
+  - has_many: Tag
+- name: Tag
+  description: A discovery tag used to search for services.
+  relationships:
+  - belongs_to: SellerService
+- name: EnterpriseUser
+  description: A user within an organization, managed by an Enterprise Admin.
+  relationships:
+  - belongs_to: Organization
+- name: Organization
+  description: An enterprise tenant with admin-managed users.
+  relationships:
+  - has_many: EnterpriseUser
+notes: >-
+  Relationships inferred from documented operations (create token references a
+  sellerServiceId; charges attach to tokens; services belong to agents; tags
+  group services; enterprise admins manage users). Field-level id prefixes are
+  not published.

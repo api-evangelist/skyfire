@@ -1,0 +1,53 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.skyfire.xyz/reference/http-error-status-codes
+format: custom-json
+envelope:
+  fields:
+    code: Stable, machine-readable error code. Branch on this.
+    message: Human-readable description. May change without notice.
+    details: Present only on validation errors; maps each failing field to a message.
+  example: |
+    {
+      "code": "BAD_REQUEST",
+      "message": "Bad Request",
+      "details": { "field": { "message": "..." } }
+    }
+error_codes:
+- code: BAD_REQUEST
+  http_status: 400
+  meaning: The request was malformed or contained invalid input.
+  action: Check the request against the endpoint's schema and retry.
+- code: VALIDATION_ERROR
+  http_status: 422
+  meaning: One or more fields failed validation.
+  action: Inspect details for the offending fields and correct them.
+- code: NOT_AUTHORIZED
+  http_status: 401
+  meaning: Authentication is missing or invalid.
+  action: Provide a valid API key or token and retry.
+- code: FORBIDDEN
+  http_status: 403
+  meaning: Authenticated but not permitted (e.g. valid key but a related resource is inactive).
+  action: Do not retry without the required permissions.
+- code: NOT_FOUND
+  http_status: 404
+  meaning: The requested resource does not exist, or the URL is invalid.
+  action: Verify the identifier and URL in the request path.
+- code: NOT_ELIGIBLE
+  http_status: 409
+  meaning: The account or resource is not eligible (e.g. seller service still pending approval).
+  action: Do not retry until eligibility requirements are met.
+- code: PAYMENT_DECLINED
+  http_status: 400
+  meaning: The payment was declined.
+  action: Use a different payment method and retry.
+- code: PAYMENT_ERROR
+  http_status: 402
+  meaning: Payment is required or could not be completed.
+  action: Ensure the account is funded before retrying.
+notes: >-
+  Branch on the stable `code` field, not the HTTP status alone — multiple codes
+  can share a status (BAD_REQUEST and PAYMENT_DECLINED are both 400). This is not
+  an RFC 9457 problem+json envelope; it is Skyfire's own {code, message, details}
+  shape.

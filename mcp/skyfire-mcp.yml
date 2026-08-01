@@ -1,0 +1,33 @@
+generated: '2026-07-21'
+method: searched
+status: published
+source: https://docs.skyfire.xyz/docs/using-the-skyfire-mcp-server
+server:
+  name: skyfire
+  transport: http
+  url: https://mcp.skyfire.xyz/mcp
+  sandbox_url: https://mcp-sandbox.skyfire.xyz/mcp
+  authentication:
+    type: apiKey
+    header: skyfire-api-key
+    description: Your Skyfire API key (buyer/seller/enterprise, environment-specific).
+capabilities:
+- Discover seller services
+- Create kya, pay, and kya-pay tokens
+- Orchestrate agent commerce workflows (e.g. connect to another provider's MCP
+  server, pay with a Skyfire token, and retrieve the purchased resource)
+client_config:
+  claude_desktop:
+    mcpServers:
+      skyfire:
+        command: npx
+        args:
+        - "-y"
+        - mcp-remote
+        - https://mcp.skyfire.xyz/mcp
+        - "--header"
+        - "skyfire-api-key: <YOUR_SKYFIRE_API_KEY>"
+notes: >-
+  Official hosted, remote MCP server. Usable directly via JSON-RPC over HTTP or
+  through an agent host (Claude Desktop config shown). Production and Sandbox
+  endpoints are separate and require the matching environment API key.
