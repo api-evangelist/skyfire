@@ -14,20 +14,26 @@ server:
 capabilities:
 - Discover seller services
 - Create kya, pay, and kya-pay tokens
-- Orchestrate agent commerce workflows (e.g. connect to another provider's MCP
-  server, pay with a Skyfire token, and retrieve the purchased resource)
+- Orchestrate agent commerce workflows (e.g. connect to another provider's MCP server, pay with a Skyfire
+  token, and retrieve the purchased resource)
 client_config:
   claude_desktop:
     mcpServers:
       skyfire:
         command: npx
         args:
-        - "-y"
+        - -y
         - mcp-remote
         - https://mcp.skyfire.xyz/mcp
-        - "--header"
-        - "skyfire-api-key: <YOUR_SKYFIRE_API_KEY>"
-notes: >-
-  Official hosted, remote MCP server. Usable directly via JSON-RPC over HTTP or
-  through an agent host (Claude Desktop config shown). Production and Sandbox
-  endpoints are separate and require the matching environment API key.
+        - --header
+        - 'skyfire-api-key: <YOUR_SKYFIRE_API_KEY>'
+notes: Official hosted, remote MCP server. Usable directly via JSON-RPC over HTTP or through an agent
+  host (Claude Desktop config shown). Production and Sandbox endpoints are separate and require the matching
+  environment API key.
+deployment:
+  mode: remote
+  endpoint: https://mcp.skyfire.xyz/mcp
+  verified: probed
+  probe: gated
+  checked: '2026-08-12'
+  source: catalog MCP census
