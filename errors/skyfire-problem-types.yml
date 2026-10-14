@@ -1,0 +1,50 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/skyfire-agent-and-token-apis-openapi.yml
+- openapi/skyfire-service-directory-apis-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: null
+coverage:
+  operations: 31
+  statuses_declared: 5
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad Request
+  operations: 10
+  media_types:
+  - application/json
+  - text/plain
+  schema: null
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 15
+  media_types:
+  - application/json
+  schema: null
+- status: 402
+  title: Payment Required
+  description: Payment Required
+  operations: 2
+  media_types:
+  - application/json
+  schema: null
+- status: 404
+  title: Not Found
+  description: Not Found
+  operations: 15
+  media_types:
+  - application/json
+  schema: null
+- status: 422
+  title: Unprocessable Content
+  description: Unprocessable Entity
+  operations: 24
+  media_types:
+  - application/json
+  schema: null

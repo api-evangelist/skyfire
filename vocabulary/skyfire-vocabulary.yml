@@ -1,0 +1,29 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/skyfire-agent-and-token-apis-openapi.yml
+- openapi/skyfire-service-directory-apis-openapi.yml
+vocabulary:
+  name: Skyfire Domain Vocabulary
+  description: 'Terms declared by Skyfire''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-14'
+  terms:
+  - term: SellerService
+    definition: 'Object declared by the contract with fields: id, name, description, tags, type, price, priceModel, minimumTokenAmount, humanIdentityRequirement,
+      openApiSpecUrl, websiteUrl, fetchAgentProfileUrl. (9 more)'
+    tags:
+    - Object
+    source: openapi/skyfire-agent-and-token-apis-openapi.yml#/components/schemas/SellerService
+  - term: OrganizationUser
+    definition: 'Object declared by the contract with fields: id, organizationId, email, isAdmin, orgMemberRole, isActive, agents, createdAt.'
+    tags:
+    - Object
+    source: openapi/skyfire-agent-and-token-apis-openapi.yml#/components/schemas/OrganizationUser
+  - term: DirectoryService
+    definition: 'Object declared by the contract with fields: id, name, description, tags, type, price, priceModel, minimumTokenAmount, humanIdentityRequirement,
+      seller, openApiSpecUrl, websiteUrl. (5 more)'
+    tags:
+    - Object
+    source: openapi/skyfire-service-directory-apis-openapi.yml#/components/schemas/DirectoryService

@@ -1,4 +1,5 @@
 aid: skyfire
+
 deliveryModel:
   model: saas
   open_source: false
@@ -10,6 +11,7 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+
 accessModel:
   pricing: unknown
   onboarding: unknown
@@ -24,32 +26,39 @@ accessModel:
   - sandbox
   generated: '2026-09-03'
   method: derived
+
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/skyfire.png
+
 name: Skyfire
-description: >-
-  Skyfire is the open identity and payments layer for AI agents. It lets AI
-  agents securely create accounts, verify a real-world identity (Know Your Agent,
-  KYA), and autonomously pay for digital services using token-based
-  authentication and stablecoin settlement. Developers use Skyfire to monetize
-  APIs, tools, MCP servers, and content directly to agents. The platform issues
-  three signed, interoperable KYAPay token types — kya (identity), pay (payment),
-  and kya-pay (combined) — that buyer agents present to seller services over a
-  simple REST API and a hosted MCP server. Sellers validate and charge tokens,
-  discover services, and manage seller-service lifecycles, while enterprises
-  manage users and agents through admin APIs. Skyfire is backed by DCVC,
-  Lightspeed Venture Partners, and Trinity Ventures.
+
+description: Skyfire is the open identity and payments layer for AI agents. It lets AI agents securely create accounts, verify a real-world identity
+  (Know Your Agent, KYA), and autonomously pay for digital services using token-based authentication and stablecoin settlement. Developers use
+  Skyfire to monetize APIs, tools, MCP servers, and content directly to agents. The platform issues three signed, interoperable KYAPay token types
+  — kya (identity), pay (payment), and kya-pay (combined) — that buyer agents present to seller services over a simple REST API and a hosted MCP
+  server. Sellers validate and charge tokens, discover services, and manage seller-service lifecycles, while enterprises manage users and agents
+  through admin APIs. Skyfire is backed by DCVC, Lightspeed Venture Partners, and Trinity Ventures.
+
 url: https://raw.githubusercontent.com/api-evangelist/skyfire/refs/heads/main/apis.yml
+
 x-type: company
+
 x-source: vc-portfolio
+
 x-backed-by:
 - dcvc
 - lightspeed-venture-partners
 - trinity-ventures
+
 x-tier: stub
+
 x-tier-reason: portfolio-lead
+
 specificationVersion: '0.23'
+
 created: '2026-07-17'
+
 modified: '2026-10-06'
+
 tags:
 - Company
 - AI Agents
@@ -61,6 +70,7 @@ tags:
 - MCP
 - Agentic Commerce
 - Know Your Agent
+
 tags_raw:
 - Company
 - AI Agents
@@ -72,38 +82,28 @@ tags_raw:
 - MCP
 - Agentic Commerce
 - Know Your Agent
-apis:
-- name: Skyfire API
-  description: >-
-    REST API for AI-agent identity and payments. Buyer agents create kya, pay,
-    and kya-pay tokens; seller agents introspect and charge tokens and manage
-    seller services; enterprises manage users. Authenticated with a single
-    skyfire-api-key header (role-specific keys).
-  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
-  baseURL: https://api.skyfire.xyz
-  tags:
-  - Agentic Payments
-  - Identity
-  - Tokens
-  tags_raw:
-  - Agent Payments
-  - Identity
-  - Tokens
-  properties:
-  - type: Documentation
-    url: https://docs.skyfire.xyz/docs/developer-documentation
-  - type: APIReference
-    url: https://docs.skyfire.xyz/reference/skyfire-apis
-  - type: Authentication
-    url: authentication/skyfire-authentication.yml
-  - type: MCPServer
-    url: mcp/skyfire-mcp.yml
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+- type: AgenticAccess
+  url: agentic-access/skyfire-agentic-access.yml
+- type: Spectral
+  url: rules/skyfire-rules.yml
+- type: JSONLD
+  url: json-ld/skyfire-context.jsonld
+- type: Vocabulary
+  url: vocabulary/skyfire-vocabulary.yml
+- type: ErrorCatalog
+  url: errors/skyfire-problem-types.yml
+- type: Hosts
+  url: hosts/skyfire-hosts.yml
+- type: Vendors
+  url: vendors/skyfire-vendors.yml
 - url: https://skyfire.xyz/blog/
   type: Blog
 - url: https://skyfire.xyz/blog/feed/
@@ -162,8 +162,66 @@ common:
   url: security/skyfire-domain-security.yml
 - type: AgentSkill
   url: skills/skyfire-skyfire.md
+
+apis:
+- name: Skyfire API
+  description: REST API for AI-agent identity and payments. Buyer agents create kya, pay, and kya-pay tokens; seller agents introspect and charge
+    tokens and manage seller services; enterprises manage users. Authenticated with a single skyfire-api-key header (role-specific keys).
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Agentic Payments
+  - Identity
+  - Tokens
+  tags_raw:
+  - Agent Payments
+  - Identity
+  - Tokens
+  properties:
+  - type: Documentation
+    url: https://docs.skyfire.xyz/docs/developer-documentation
+  - type: APIReference
+    url: https://docs.skyfire.xyz/reference/skyfire-apis
+  - type: Authentication
+    url: authentication/skyfire-authentication.yml
+  - type: MCPServer
+    url: mcp/skyfire-mcp.yml
+  aid: skyfire:skyfire-api
+- aid: skyfire:skyfire-agent-and-token-apis
+  name: Skyfire Agent And Token Apis Openapi.Yml API
+  description: The Agent And Token Apis Openapi.Yml API from Skyfire — 21 operation(s) for agent and token apis openapi.yml.
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Agent And Token Apis Openapi.Yml
+  properties:
+  - type: OpenAPI
+    url: openapi/skyfire-agent-and-token-apis-openapi.yml
+  - type: JSONSchema
+    url: json-schema/skyfire-seller-service-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-organization-user-schema.json
+- aid: skyfire:skyfire-service-directory-apis
+  name: Skyfire Service Directory Apis Openapi.Yml API
+  description: The Service Directory Apis Openapi.Yml API from Skyfire — 5 operation(s) for service directory apis openapi.yml.
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Service Directory Apis Openapi.Yml
+  properties:
+  - type: OpenAPI
+    url: openapi/skyfire-service-directory-apis-openapi.yml
+  - type: JSONSchema
+    url: json-schema/skyfire-directory-service-schema.json
+
 x-enrichment:
   date: '2026-07-21'
   status: enriched
   artifacts_added: 17
   pass: local-v1
+
+x-readme-harvest:
+  date: '2026-10-14'
+  ops: 31
+  tool: harvest-readme-openapi.py
+  portal: https://docs.skyfire.xyz

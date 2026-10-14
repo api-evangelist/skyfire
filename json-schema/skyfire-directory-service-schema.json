@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/skyfire/main/json-schema/skyfire-directory-service-schema.json",
+  "title": "DirectoryService",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/skyfire-service-directory-apis-openapi.yml#/components/schemas/DirectoryService",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier of the service.",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the service."
+    },
+    "description": {
+      "type": "string",
+      "description": "The description of the service."
+    },
+    "tags": {
+      "type": "array",
+      "description": "The tags for this service. Empty if none were set.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "type": {
+      "type": "string",
+      "description": "One of \"API\", \"WEB_PAGE\", \"VERIFIED_DOMAIN\", \"MCP_SERVER_LOCAL\", \"MCP_SERVER_REMOTE\", or \"FETCH_AGENT\"",
+      "enum": [
+        "API",
+        "WEB_PAGE",
+        "VERIFIED_DOMAIN",
+        "MCP_SERVER_LOCAL",
+        "MCP_SERVER_REMOTE",
+        "FETCH_AGENT"
+      ]
+    },
+    "price": {
+      "type": "string",
+      "description": "USD as string."
+    },
+    "priceModel": {
+      "type": "string",
+      "description": "One of \"PAY_PER_USE\", \"SUBSCRIPTION\", \"PAY_PER_MB\", or \"CUSTOM\"",
+      "enum": [
+        "PAY_PER_USE",
+        "SUBSCRIPTION",
+        "PAY_PER_MB",
+        "CUSTOM"
+      ]
+    },
+    "minimumTokenAmount": {
+      "type": "string",
+      "description": "USD as string."
+    },
+    "humanIdentityRequirement": {
+      "type": "object",
+      "description": "The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.",
+      "properties": {
+        "identityLevels": {
+          "type": "array",
+          "description": "Identity levels required from verified humans. e.g. `\"INDIVIDUAL_LEVEL2\"`.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organization": {
+          "type": "array",
+          "description": "Organization identity fields required.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "individual": {
+          "type": "array",
+          "description": "Individual identity fields required.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "seller": {
+      "type": "object",
+      "description": "The seller that owns this service.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the seller.",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the seller."
+        },
+        "identityLevel": {
+          "type": "string",
+          "description": "The seller's verified identity level, when available. e.g. `\"BUSINESS_LEVEL1\"`."
+        }
+      }
+    },
+    "openApiSpecUrl": {
+      "type": "string",
+      "description": "Present when `type` is API."
+    },
+    "websiteUrl": {
+      "type": "string",
+      "description": "Present when `type` is WEB_PAGE."
+    },
+    "fetchAgentProfileUrl": {
+      "type": "string",
+      "description": "Present when `type` is FETCH_AGENT."
+    },
+    "mcpServerUrl": {
+      "type": "string",
+      "description": "Present when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE."
+    },
+    "acceptedTokens": {
+      "type": "array",
+      "description": "Any of \"kya\", \"pay\", and/or \"kya-pay\".",
+      "items": {
+        "type": "string",
+        "enum": [
+          "kya",
+          "pay",
+          "kya-pay"
+        ]
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "When the service was created.",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "description": "When the service was last updated.",
+      "format": "date-time"
+    }
+  }
+}

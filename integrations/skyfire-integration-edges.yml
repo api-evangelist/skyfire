@@ -1,0 +1,35 @@
+generated: '2026-10-14'
+method: searched
+source:
+- https://composio.dev/toolkits/skyfire
+checked:
+- https://composio.dev/toolkits/skyfire
+- https://monid.ai/tools/skyfire
+- https://n8n.io/integrations/skyfire/
+- https://zapier.com/apps/skyfire/integrations
+summary: null
+marketplace_apps:
+- marketplace: composio
+  channel: agent-gateway
+  app: skyfire
+  url: https://composio.dev/toolkits/skyfire
+  identity: action-prefix
+  actions:
+  - key: SKYFIRE_CHARGE_TOKEN
+  - key: SKYFIRE_CREATE_KYA_PAY_TOKEN
+  - key: SKYFIRE_CREATE_KYA_TOKEN
+  - key: SKYFIRE_CREATE_PAY_TOKEN
+  - key: SKYFIRE_GET_ALL_SERVICE_TAGS
+  - key: SKYFIRE_GET_BUYER_WALLET_BALANCE
+  - key: SKYFIRE_GET_DIRECTORY_SERVICE_BY_ID
+  - key: SKYFIRE_GET_SERVICE
+  - key: SKYFIRE_GET_SERVICES_BY_AGENT
+  - key: SKYFIRE_GET_SERVICES_BY_TAGS
+  - key: SKYFIRE_GET_TOKEN_CHARGES
+  - key: SKYFIRE_INTROSPECT_TOKEN
+  - key: SKYFIRE_LIST_AGENT_SELLER_SERVICES
+  - key: SKYFIRE_LIST_BUYER_TOKENS
+  - key: SKYFIRE_LIST_DIRECTORY_SERVICES
+  - key: SKYFIRE_SET_AGENT_SOURCE_IPS
+edges: []
+templates: []

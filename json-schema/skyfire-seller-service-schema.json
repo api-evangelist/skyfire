@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/skyfire/main/json-schema/skyfire-seller-service-schema.json",
+  "title": "SellerService",
+  "x-generated": "2026-10-14",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/skyfire-agent-and-token-apis-openapi.yml#/components/schemas/SellerService",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier of the seller service."
+    },
+    "name": {
+      "type": "string",
+      "description": "The name of the service."
+    },
+    "description": {
+      "type": "string",
+      "description": "The description of the service."
+    },
+    "tags": {
+      "type": "array",
+      "description": "The tags for this service. Empty if none were set.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "type": {
+      "type": "string",
+      "description": "One of \"API\", \"WEB_PAGE\", \"VERIFIED_DOMAIN\", \"MCP_SERVER_LOCAL\", \"MCP_SERVER_REMOTE\", or \"FETCH_AGENT\"",
+      "enum": [
+        "API",
+        "WEB_PAGE",
+        "VERIFIED_DOMAIN",
+        "MCP_SERVER_LOCAL",
+        "MCP_SERVER_REMOTE",
+        "FETCH_AGENT"
+      ]
+    },
+    "price": {
+      "type": "string",
+      "description": "USD as string. For priceModel: CUSTOM, use \"0\"."
+    },
+    "priceModel": {
+      "type": "string",
+      "description": "One of \"PAY_PER_USE\", \"SUBSCRIPTION\", \"PAY_PER_MB\", or \"CUSTOM\"",
+      "enum": [
+        "PAY_PER_USE",
+        "SUBSCRIPTION",
+        "PAY_PER_MB",
+        "CUSTOM"
+      ]
+    },
+    "minimumTokenAmount": {
+      "type": "string",
+      "description": "USD as string. For CUSTOM, use \"0\". Must be ≥ price after numeric conversion."
+    },
+    "humanIdentityRequirement": {
+      "type": "object",
+      "description": "The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.",
+      "properties": {
+        "identityLevels": {
+          "type": "array",
+          "description": "Identity levels required from verified humans. e.g. `\"INDIVIDUAL_LEVEL1\"`.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "organization": {
+          "type": "array",
+          "description": "Values must be allowed identity field names.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "individual": {
+          "type": "array",
+          "description": "Values must be allowed identity field names.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "openApiSpecUrl": {
+      "type": "string",
+      "description": "Required when `type` is API."
+    },
+    "websiteUrl": {
+      "type": "string",
+      "description": "Required when `type` is WEB_PAGE."
+    },
+    "fetchAgentProfileUrl": {
+      "type": "string",
+      "description": "Required when `type` is FETCH_AGENT."
+    },
+    "mcpServerUrl": {
+      "type": "string",
+      "description": "Required when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE."
+    },
+    "termsOfService": {
+      "type": "object",
+      "description": "The details of the terms of service if they exist.",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The URL where the terms of service are available to review."
+        },
+        "required": {
+          "type": "boolean",
+          "description": "`true` if acceptance of the terms of service is required."
+        }
+      }
+    },
+    "acceptedTokens": {
+      "type": "array",
+      "description": "Any of \"kya\", \"pay\", and/or \"kya-pay\". Must not be an empty array. If field is omitted, then all token types are accepted.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "kya",
+          "pay",
+          "kya-pay"
+        ]
+      }
+    },
+    "maxTokenTTLSeconds": {
+      "type": "number",
+      "description": "Maximum token TTL in seconds."
+    },
+    "seller": {
+      "type": "object",
+      "description": "The seller that owns this service.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the seller."
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the seller."
+        },
+        "identityLevel": {
+          "type": "string",
+          "description": "Does not exist if the seller has not done verification."
+        }
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "description": "When the service was created. e.g. `\"2025-07-18T02:51:54.265Z\"`."
+    },
+    "updatedAt": {
+      "type": "string",
+      "description": "When the service was last updated. e.g. `\"2025-07-18T02:54:19.767Z\"`."
+    },
+    "active": {
+      "type": "boolean",
+      "description": "Whether the service is active."
+    },
+    "approved": {
+      "type": "boolean",
+      "description": "Whether the service has been approved. Only approved services can be activated."
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "description",
+    "tags",
+    "type",
+    "price",
+    "priceModel",
+    "minimumTokenAmount",
+    "humanIdentityRequirement",
+    "seller",
+    "createdAt",
+    "updatedAt",
+    "active",
+    "approved"
+  ]
+}

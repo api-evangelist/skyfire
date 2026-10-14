@@ -1,0 +1,71 @@
+generated: '2026-10-14'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 5
+  own: 4
+  other_domain: 0
+  platform: 1
+  roles:
+  - api
+  - identity
+  - portal
+  - source
+  - website
+hosts:
+- host: api.skyfire.xyz
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: skyfire.xyz
+  role: api
+  relation: own
+- host: app.skyfire.xyz
+  found_by:
+  - pointer
+  types:
+  - SignUp
+  - Login
+  serves: []
+  registrable_domain: skyfire.xyz
+  role: identity
+  relation: own
+- host: docs.skyfire.xyz
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - DeveloperPortal
+  - Documentation
+  - APIReference
+  - GettingStarted
+  serves:
+  - docs
+  registrable_domain: skyfire.xyz
+  role: portal
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: skyfire.xyz
+  found_by:
+  - pointer
+  types:
+  - Blog
+  - BlogRSS
+  - Website
+  - TermsOfService
+  - PrivacyPolicy
+  serves: []
+  registrable_domain: skyfire.xyz
+  role: website
+  relation: own

@@ -1,0 +1,1472 @@
+[
+ {
+  "page": "https://docs.skyfire.xyz/reference/get-all-services.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "skyfire-service-directory-apis",
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://api.skyfire.xyz"
+    }
+   ],
+   "components": {
+    "schemas": {
+     "DirectoryService": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "Unique identifier of the service.",
+        "format": "uuid"
+       },
+       "name": {
+        "type": "string",
+        "description": "The name of the service."
+       },
+       "description": {
+        "type": "string",
+        "description": "The description of the service."
+       },
+       "tags": {
+        "type": "array",
+        "description": "The tags for this service. Empty if none were set.",
+        "items": {
+         "type": "string"
+        }
+       },
+       "type": {
+        "type": "string",
+        "description": "One of \"API\", \"WEB_PAGE\", \"VERIFIED_DOMAIN\", \"MCP_SERVER_LOCAL\", \"MCP_SERVER_REMOTE\", or \"FETCH_AGENT\"",
+        "enum": [
+         "API",
+         "WEB_PAGE",
+         "VERIFIED_DOMAIN",
+         "MCP_SERVER_LOCAL",
+         "MCP_SERVER_REMOTE",
+         "FETCH_AGENT"
+        ]
+       },
+       "price": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "priceModel": {
+        "type": "string",
+        "description": "One of \"PAY_PER_USE\", \"SUBSCRIPTION\", \"PAY_PER_MB\", or \"CUSTOM\"",
+        "enum": [
+         "PAY_PER_USE",
+         "SUBSCRIPTION",
+         "PAY_PER_MB",
+         "CUSTOM"
+        ]
+       },
+       "minimumTokenAmount": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "humanIdentityRequirement": {
+        "type": "object",
+        "description": "The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.",
+        "properties": {
+         "identityLevels": {
+          "type": "array",
+          "description": "Identity levels required from verified humans. e.g. `\"INDIVIDUAL_LEVEL2\"`.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "organization": {
+          "type": "array",
+          "description": "Organization identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "individual": {
+          "type": "array",
+          "description": "Individual identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "seller": {
+        "type": "object",
+        "description": "The seller that owns this service.",
+        "properties": {
+         "id": {
+          "type": "string",
+          "description": "Unique identifier of the seller.",
+          "format": "uuid"
+         },
+         "name": {
+          "type": "string",
+          "description": "The name of the seller."
+         },
+         "identityLevel": {
+          "type": "string",
+          "description": "The seller's verified identity level, when available. e.g. `\"BUSINESS_LEVEL1\"`."
+         }
+        }
+       },
+       "openApiSpecUrl": {
+        "type": "string",
+        "description": "Present when `type` is API."
+       },
+       "websiteUrl": {
+        "type": "string",
+        "description": "Present when `type` is WEB_PAGE."
+       },
+       "fetchAgentProfileUrl": {
+        "type": "string",
+        "description": "Present when `type` is FETCH_AGENT."
+       },
+       "mcpServerUrl": {
+        "type": "string",
+        "description": "Present when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE."
+       },
+       "acceptedTokens": {
+        "type": "array",
+        "description": "Any of \"kya\", \"pay\", and/or \"kya-pay\".",
+        "items": {
+         "type": "string",
+         "enum": [
+          "kya",
+          "pay",
+          "kya-pay"
+         ]
+        }
+       },
+       "createdAt": {
+        "type": "string",
+        "description": "When the service was created.",
+        "format": "date-time"
+       },
+       "updatedAt": {
+        "type": "string",
+        "description": "When the service was last updated.",
+        "format": "date-time"
+       }
+      }
+     }
+    }
+   },
+   "security": [
+    {}
+   ],
+   "paths": {
+    "/api/v1/directory/services": {
+     "get": {
+      "summary": "Get All Services",
+      "description": "Get all of the approved and active services.",
+      "operationId": "get-all-services",
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "data": {
+             "type": "array",
+             "description": "The matching services.",
+             "items": {
+              "$ref": "#/components/schemas/DirectoryService"
+             }
+            }
+           }
+          },
+          "examples": {
+           "Ok": {
+            "summary": "Ok",
+            "value": {
+             "data": [
+              {
+               "id": "350d433d-6ed4-4482-bcfc-14b7da807f9b",
+               "name": "Test Service",
+               "description": "test",
+               "tags": [],
+               "type": "FETCH_AGENT",
+               "price": "0.000001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.000001",
+               "humanIdentityRequirement": {
+                "identityLevels": [
+                 "INDIVIDUAL_LEVEL2"
+                ],
+                "organization": [],
+                "individual": [
+                 "birthdate",
+                 "given_name",
+                 "middle_name",
+                 "family_name",
+                 "phone_number",
+                 "phone_country_code",
+                 "id_document.type",
+                 "id_document.issued_on",
+                 "id_document.expires_on",
+                 "id_document.issued_by",
+                 "address-full",
+                 "address-city",
+                 "address-region",
+                 "address-country",
+                 "no-address"
+                ]
+               },
+               "seller": {
+                "id": "98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7",
+                "name": "Fetch Agent Seller"
+               },
+               "fetchAgentProfileUrl": "agentverse.ai/agents/details/agent1qfmhmg4sa4azt0squ4za50k7t9pzwen0k6wsc0c6mxdertzq6hhjquhgvcy",
+               "acceptedTokens": [
+                "pay",
+                "kya-pay"
+               ],
+               "createdAt": "2025-07-08T16:30:52.986Z",
+               "updatedAt": "2025-07-08T17:55:09.082Z"
+              },
+              {
+               "id": "ed9eae44-77ed-47bb-8f36-8fcaf363d3cf",
+               "name": "Real Estate Website",
+               "description": "",
+               "tags": [],
+               "type": "WEB_PAGE",
+               "price": "0.001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.01",
+               "humanIdentityRequirement": {
+                "identityLevels": [],
+                "organization": [],
+                "individual": []
+               },
+               "seller": {
+                "id": "5be86e6c-3ce7-46ad-9810-9269149251ff",
+                "name": "Skyfire Official Seller",
+                "identityLevel": "BUSINESS_LEVEL1"
+               },
+               "websiteUrl": "to-be-determined.com",
+               "createdAt": "2025-07-07T17:42:31.895Z",
+               "updatedAt": "2025-07-07T17:42:31.895Z"
+              },
+              {
+               "id": "cbf697f2-a52b-4b7b-a90b-f99ea3fcdba4",
+               "name": "QBio.ai - Boltz Protein Folding",
+               "description": "Predicts complex structures from amino acid, DNA, or RNA sequences, as well as small molecules from SMILES strings or CCD (Chemical Component Dictionary) format.",
+               "tags": [
+                "seller"
+               ],
+               "type": "API",
+               "price": "0.000001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.000001",
+               "humanIdentityRequirement": {
+                "identityLevels": [
+                 "INDIVIDUAL_LEVEL2",
+                 "BUSINESS_LEVEL1"
+                ],
+                "organization": [
+                 "organization_name",
+                 "organization_tax_id",
+                 "organization_physical_address-full",
+                 "organization_physical_address-city",
+                 "organization_physical_address-region",
+                 "organization_physical_address-country",
+                 "no-organization_physical_address",
+                 "organization_registered_address-full",
+                 "organization_registered_address-city",
+                 "organization_registered_address-region",
+                 "organization_registered_address-country",
+                 "no-organization_registered_address",
+                 "birthdate",
+                 "given_name",
+                 "middle_name",
+                 "family_name",
+                 "phone_number",
+                 "phone_country_code"
+                ],
+                "individual": [
+                 "birthdate",
+                 "given_name",
+                 "middle_name",
+                 "family_name",
+                 "phone_number",
+                 "phone_country_code",
+                 "id_document.type",
+                 "id_document.issued_on",
+                 "id_document.expires_on",
+                 "id_document.issued_by",
+                 "address-full",
+                 "address-city",
+                 "address-region",
+                 "address-country",
+                 "no-address"
+                ]
+               },
+               "seller": {
+                "id": "6febdef8-624b-410d-a75d-bfb6389644b6",
+                "name": "QBIOai"
+               },
+               "openApiSpecUrl": "api.staging-europe-eemshaven-a.qbio.ai/v1/agent/submit",
+               "acceptedTokens": [
+                "kya",
+                "pay",
+                "kya-pay"
+               ],
+               "createdAt": "2025-07-07T12:39:56.763Z",
+               "updatedAt": "2025-07-09T14:23:38.822Z"
+              }
+             ]
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "x-readme": {
+       "code-samples": [
+        {
+         "language": "shell",
+         "name": "cURL",
+         "code": "curl -i -X GET 'https://api.skyfire.xyz/api/v1/directory/services'"
+        },
+        {
+         "language": "node",
+         "name": "",
+         "code": "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/directory/services'\n);\nconsole.log(await res.json());"
+        },
+        {
+         "language": "python",
+         "name": "",
+         "code": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nconn.request(\"GET\", \"/api/v1/directory/services\")\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+        }
+       ],
+       "samples-languages": [
+        "shell",
+        "node",
+        "python"
+       ]
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "headers": [],
+    "explorer-enabled": false,
+    "proxy-enabled": false
+   },
+   "x-readme-fauxas": true
+  }
+ },
+ {
+  "page": "https://docs.skyfire.xyz/reference/get-service.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "skyfire-service-directory-apis",
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://api.skyfire.xyz"
+    }
+   ],
+   "components": {
+    "schemas": {
+     "DirectoryService": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "Unique identifier of the service.",
+        "format": "uuid"
+       },
+       "name": {
+        "type": "string",
+        "description": "The name of the service."
+       },
+       "description": {
+        "type": "string",
+        "description": "The description of the service."
+       },
+       "tags": {
+        "type": "array",
+        "description": "The tags for this service. Empty if none were set.",
+        "items": {
+         "type": "string"
+        }
+       },
+       "type": {
+        "type": "string",
+        "description": "One of \"API\", \"WEB_PAGE\", \"VERIFIED_DOMAIN\", \"MCP_SERVER_LOCAL\", \"MCP_SERVER_REMOTE\", or \"FETCH_AGENT\"",
+        "enum": [
+         "API",
+         "WEB_PAGE",
+         "VERIFIED_DOMAIN",
+         "MCP_SERVER_LOCAL",
+         "MCP_SERVER_REMOTE",
+         "FETCH_AGENT"
+        ]
+       },
+       "price": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "priceModel": {
+        "type": "string",
+        "description": "One of \"PAY_PER_USE\", \"SUBSCRIPTION\", \"PAY_PER_MB\", or \"CUSTOM\"",
+        "enum": [
+         "PAY_PER_USE",
+         "SUBSCRIPTION",
+         "PAY_PER_MB",
+         "CUSTOM"
+        ]
+       },
+       "minimumTokenAmount": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "humanIdentityRequirement": {
+        "type": "object",
+        "description": "The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.",
+        "properties": {
+         "identityLevels": {
+          "type": "array",
+          "description": "Identity levels required from verified humans. e.g. `\"INDIVIDUAL_LEVEL2\"`.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "organization": {
+          "type": "array",
+          "description": "Organization identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "individual": {
+          "type": "array",
+          "description": "Individual identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "seller": {
+        "type": "object",
+        "description": "The seller that owns this service.",
+        "properties": {
+         "id": {
+          "type": "string",
+          "description": "Unique identifier of the seller.",
+          "format": "uuid"
+         },
+         "name": {
+          "type": "string",
+          "description": "The name of the seller."
+         },
+         "identityLevel": {
+          "type": "string",
+          "description": "The seller's verified identity level, when available. e.g. `\"BUSINESS_LEVEL1\"`."
+         }
+        }
+       },
+       "openApiSpecUrl": {
+        "type": "string",
+        "description": "Present when `type` is API."
+       },
+       "websiteUrl": {
+        "type": "string",
+        "description": "Present when `type` is WEB_PAGE."
+       },
+       "fetchAgentProfileUrl": {
+        "type": "string",
+        "description": "Present when `type` is FETCH_AGENT."
+       },
+       "mcpServerUrl": {
+        "type": "string",
+        "description": "Present when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE."
+       },
+       "acceptedTokens": {
+        "type": "array",
+        "description": "Any of \"kya\", \"pay\", and/or \"kya-pay\".",
+        "items": {
+         "type": "string",
+         "enum": [
+          "kya",
+          "pay",
+          "kya-pay"
+         ]
+        }
+       },
+       "createdAt": {
+        "type": "string",
+        "description": "When the service was created.",
+        "format": "date-time"
+       },
+       "updatedAt": {
+        "type": "string",
+        "description": "When the service was last updated.",
+        "format": "date-time"
+       }
+      }
+     }
+    }
+   },
+   "security": [
+    {}
+   ],
+   "paths": {
+    "/api/v1/directory/services/{serviceId}": {
+     "get": {
+      "summary": "Get Service",
+      "description": "Get a single service's details by its ID.",
+      "operationId": "get-service",
+      "parameters": [
+       {
+        "in": "path",
+        "name": "serviceId",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "description": "Unique identifier of the service to get. Must be a valid UUID. e.g. `\"350d433d-6ed4-4482-bcfc-14b7da807f9b\"`"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "$ref": "#/components/schemas/DirectoryService"
+          },
+          "examples": {
+           "Ok": {
+            "summary": "Ok",
+            "value": {
+             "id": "350d433d-6ed4-4482-bcfc-14b7da807f9b",
+             "name": "Fetch QA Seller Agent",
+             "description": "Fetch QA Seller Agent",
+             "tags": [],
+             "type": "FETCH_AGENT",
+             "price": "0.000001",
+             "priceModel": "PAY_PER_USE",
+             "minimumTokenAmount": "0.000001",
+             "humanIdentityRequirement": {
+              "identityLevels": [],
+              "organization": [],
+              "individual": []
+             },
+             "seller": {
+              "id": "98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7",
+              "name": "Fetch Agent Seller"
+             },
+             "fetchAgentProfileUrl": "https://agentverse.ai/agents/details/agent1qfmhmg4sa4azt0squ4za50k7t9pzwen0k6wsc0c6mxdertzq6hhjquhgvcy",
+             "acceptedTokens": [
+              "kya",
+              "pay",
+              "kya-pay"
+             ],
+             "createdAt": "2025-07-08T16:30:52.986Z",
+             "updatedAt": "2025-08-08T12:21:14.058Z"
+            }
+           }
+          }
+         }
+        }
+       },
+       "422": {
+        "description": "Unprocessable Entity",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            },
+            "details": {
+             "type": "object",
+             "description": "Field-level validation errors, keyed by field name."
+            }
+           }
+          },
+          "examples": {
+           "Unprocessable Entity": {
+            "summary": "Unprocessable Entity",
+            "value": {
+             "code": "VALIDATION_ERROR",
+             "message": "Validation Error",
+             "details": {
+              "id": {
+               "message": "Must be a valid UUID"
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "x-readme": {
+       "code-samples": [
+        {
+         "language": "shell",
+         "name": "cURL",
+         "code": "curl -i -X GET 'https://api.skyfire.xyz/api/v1/directory/services/350d433d-6ed4-4482-bcfc-14b7da807f9b'"
+        },
+        {
+         "language": "node",
+         "name": "",
+         "code": "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/directory/services/350d433d-6ed4-4482-bcfc-14b7da807f9b'\n);\nconsole.log(await res.json());"
+        },
+        {
+         "language": "python",
+         "name": "",
+         "code": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nconn.request(\"GET\", \"/api/v1/directory/services/350d433d-6ed4-4482-bcfc-14b7da807f9b\")\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+        }
+       ],
+       "samples-languages": [
+        "shell",
+        "node",
+        "python"
+       ]
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "headers": [],
+    "explorer-enabled": false,
+    "proxy-enabled": false
+   },
+   "x-readme-fauxas": true
+  }
+ },
+ {
+  "page": "https://docs.skyfire.xyz/reference/get-all-service-tags.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "skyfire-service-directory-apis",
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://api.skyfire.xyz"
+    }
+   ],
+   "security": [
+    {}
+   ],
+   "paths": {
+    "/api/v1/directory/tags": {
+     "get": {
+      "summary": "Get All Service Tags",
+      "description": "Get all of the tags that services can be searched by.",
+      "operationId": "get-all-service-tags",
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "data": {
+             "type": "array",
+             "description": "All available service tags.",
+             "items": {
+              "type": "string"
+             }
+            }
+           }
+          },
+          "examples": {
+           "Ok": {
+            "summary": "Ok",
+            "value": {
+             "data": [
+              "test-uagent",
+              "seller",
+              "tag4",
+              "tag5",
+              "tag6",
+              "tag707373",
+              "service",
+              "weather",
+              "api",
+              "data",
+              "forecasting",
+              "alerts",
+              "analytics",
+              "premium",
+              "dashboard",
+              "reporting",
+              "enterprise",
+              "ai",
+              "white-label"
+             ]
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "x-readme": {
+       "code-samples": [
+        {
+         "language": "shell",
+         "name": "cURL",
+         "code": "curl -i -X GET 'https://api.skyfire.xyz/api/v1/directory/tags'"
+        },
+        {
+         "language": "node",
+         "name": "",
+         "code": "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/directory/tags'\n);\nconsole.log(await res.json());"
+        },
+        {
+         "language": "python",
+         "name": "",
+         "code": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nconn.request(\"GET\", \"/api/v1/directory/tags\")\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+        }
+       ],
+       "samples-languages": [
+        "shell",
+        "node",
+        "python"
+       ]
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "headers": [],
+    "explorer-enabled": false,
+    "proxy-enabled": false
+   },
+   "x-readme-fauxas": true
+  }
+ },
+ {
+  "page": "https://docs.skyfire.xyz/reference/get-services-by-tags.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "skyfire-service-directory-apis",
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://api.skyfire.xyz"
+    }
+   ],
+   "components": {
+    "schemas": {
+     "DirectoryService": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "Unique identifier of the service.",
+        "format": "uuid"
+       },
+       "name": {
+        "type": "string",
+        "description": "The name of the service."
+       },
+       "description": {
+        "type": "string",
+        "description": "The description of the service."
+       },
+       "tags": {
+        "type": "array",
+        "description": "The tags for this service. Empty if none were set.",
+        "items": {
+         "type": "string"
+        }
+       },
+       "type": {
+        "type": "string",
+        "description": "One of \"API\", \"WEB_PAGE\", \"VERIFIED_DOMAIN\", \"MCP_SERVER_LOCAL\", \"MCP_SERVER_REMOTE\", or \"FETCH_AGENT\"",
+        "enum": [
+         "API",
+         "WEB_PAGE",
+         "VERIFIED_DOMAIN",
+         "MCP_SERVER_LOCAL",
+         "MCP_SERVER_REMOTE",
+         "FETCH_AGENT"
+        ]
+       },
+       "price": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "priceModel": {
+        "type": "string",
+        "description": "One of \"PAY_PER_USE\", \"SUBSCRIPTION\", \"PAY_PER_MB\", or \"CUSTOM\"",
+        "enum": [
+         "PAY_PER_USE",
+         "SUBSCRIPTION",
+         "PAY_PER_MB",
+         "CUSTOM"
+        ]
+       },
+       "minimumTokenAmount": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "humanIdentityRequirement": {
+        "type": "object",
+        "description": "The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.",
+        "properties": {
+         "identityLevels": {
+          "type": "array",
+          "description": "Identity levels required from verified humans. e.g. `\"INDIVIDUAL_LEVEL2\"`.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "organization": {
+          "type": "array",
+          "description": "Organization identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "individual": {
+          "type": "array",
+          "description": "Individual identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "seller": {
+        "type": "object",
+        "description": "The seller that owns this service.",
+        "properties": {
+         "id": {
+          "type": "string",
+          "description": "Unique identifier of the seller.",
+          "format": "uuid"
+         },
+         "name": {
+          "type": "string",
+          "description": "The name of the seller."
+         },
+         "identityLevel": {
+          "type": "string",
+          "description": "The seller's verified identity level, when available. e.g. `\"BUSINESS_LEVEL1\"`."
+         }
+        }
+       },
+       "openApiSpecUrl": {
+        "type": "string",
+        "description": "Present when `type` is API."
+       },
+       "websiteUrl": {
+        "type": "string",
+        "description": "Present when `type` is WEB_PAGE."
+       },
+       "fetchAgentProfileUrl": {
+        "type": "string",
+        "description": "Present when `type` is FETCH_AGENT."
+       },
+       "mcpServerUrl": {
+        "type": "string",
+        "description": "Present when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE."
+       },
+       "acceptedTokens": {
+        "type": "array",
+        "description": "Any of \"kya\", \"pay\", and/or \"kya-pay\".",
+        "items": {
+         "type": "string",
+         "enum": [
+          "kya",
+          "pay",
+          "kya-pay"
+         ]
+        }
+       },
+       "createdAt": {
+        "type": "string",
+        "description": "When the service was created.",
+        "format": "date-time"
+       },
+       "updatedAt": {
+        "type": "string",
+        "description": "When the service was last updated.",
+        "format": "date-time"
+       }
+      }
+     }
+    }
+   },
+   "security": [
+    {}
+   ],
+   "paths": {
+    "/api/v1/directory/services/search": {
+     "get": {
+      "summary": "Get Services by Tags",
+      "description": "Get all of the services that match the given tags.",
+      "operationId": "get-services-by-tags",
+      "parameters": [
+       {
+        "in": "query",
+        "name": "commaDelimitedTags",
+        "required": true,
+        "schema": {
+         "type": "string"
+        },
+        "description": "Comma-delimited list of tags to search by. e.g. `\"seller,service\"`"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "data": {
+             "type": "array",
+             "description": "The matching services.",
+             "items": {
+              "$ref": "#/components/schemas/DirectoryService"
+             }
+            }
+           }
+          },
+          "examples": {
+           "Ok": {
+            "summary": "Ok",
+            "value": {
+             "data": [
+              {
+               "id": "cbf697f2-a52b-4b7b-a90b-f99ea3fcdba4",
+               "name": "QBio.ai - Boltz Protein Folding",
+               "description": "Predicts complex structures from amino acid, DNA, or RNA sequences, as well as small molecules from SMILES strings or CCD (Chemical Component Dictionary) format.",
+               "tags": [
+                "seller"
+               ],
+               "type": "API",
+               "price": "0.000001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.000001",
+               "humanIdentityRequirement": {
+                "identityLevels": [
+                 "INDIVIDUAL_LEVEL2",
+                 "BUSINESS_LEVEL1"
+                ],
+                "organization": [
+                 "organization_name",
+                 "organization_tax_id",
+                 "organization_physical_address-full",
+                 "organization_physical_address-city",
+                 "organization_physical_address-region",
+                 "organization_physical_address-country",
+                 "no-organization_physical_address",
+                 "organization_registered_address-full",
+                 "organization_registered_address-city",
+                 "organization_registered_address-region",
+                 "organization_registered_address-country",
+                 "no-organization_registered_address",
+                 "birthdate",
+                 "given_name",
+                 "middle_name",
+                 "family_name",
+                 "phone_number",
+                 "phone_country_code"
+                ],
+                "individual": [
+                 "birthdate",
+                 "given_name",
+                 "middle_name",
+                 "family_name",
+                 "phone_number",
+                 "phone_country_code",
+                 "id_document.type",
+                 "id_document.issued_on",
+                 "id_document.expires_on",
+                 "id_document.issued_by",
+                 "address-full",
+                 "address-city",
+                 "address-region",
+                 "address-country",
+                 "no-address"
+                ]
+               },
+               "seller": {
+                "id": "6febdef8-624b-410d-a75d-bfb6389644b6",
+                "name": "QBIOai"
+               },
+               "openApiSpecUrl": "https://api.staging-europe-eemshaven-a.qbio.ai/v1/agent/submit",
+               "acceptedTokens": [
+                "kya",
+                "pay",
+                "kya-pay"
+               ],
+               "createdAt": "2025-07-07T12:39:56.763Z",
+               "updatedAt": "2025-07-09T14:23:38.822Z"
+              },
+              {
+               "id": "dca9a023-e436-4a6d-ac0f-fce00b5a04f0",
+               "name": "test",
+               "description": "test1",
+               "tags": [
+                "service"
+               ],
+               "type": "MCP_SERVER_REMOTE",
+               "price": "0.001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.000001",
+               "humanIdentityRequirement": {
+                "identityLevels": [],
+                "organization": [],
+                "individual": []
+               },
+               "seller": {
+                "id": "fc7b8eb0-7b43-442c-92d6-17f0a4d8dc30",
+                "name": "carbonarc1"
+               },
+               "mcpServerUrl": "https://skyfire-solutions-demo-carbonarc-seller-mcp-server.skyfire.dev/sse",
+               "acceptedTokens": [
+                "kya",
+                "pay",
+                "kya-pay"
+               ],
+               "createdAt": "2025-06-26T20:35:29.617Z",
+               "updatedAt": "2025-06-27T15:03:49.128Z"
+              },
+              {
+               "id": "5e7f3359-9ec1-4078-bf45-401d079af1be",
+               "name": "test service",
+               "description": "test",
+               "tags": [
+                "service"
+               ],
+               "type": "MCP_SERVER_REMOTE",
+               "price": "0.001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.000001",
+               "humanIdentityRequirement": {
+                "identityLevels": [],
+                "organization": [],
+                "individual": []
+               },
+               "seller": {
+                "id": "ab73a4e6-11c2-40d7-a07f-c61e95ffed2c",
+                "name": "test service",
+                "identityLevel": "INDIVIDUAL_LEVEL1"
+               },
+               "mcpServerUrl": "https://test.com",
+               "acceptedTokens": [
+                "kya",
+                "pay",
+                "kya-pay"
+               ],
+               "createdAt": "2025-06-27T15:15:22.118Z",
+               "updatedAt": "2025-06-27T15:16:09.978Z"
+              }
+             ]
+            }
+           }
+          }
+         }
+        }
+       },
+       "422": {
+        "description": "Unprocessable Entity",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            },
+            "details": {
+             "type": "object",
+             "description": "Field-level validation errors, keyed by field name."
+            }
+           }
+          },
+          "examples": {
+           "Unprocessable Entity": {
+            "summary": "Unprocessable Entity",
+            "value": {
+             "code": "VALIDATION_ERROR",
+             "message": "Validation Error",
+             "details": {
+              "commaDelimitedTags": {
+               "message": "'commaDelimitedTags' is required"
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "x-readme": {
+       "code-samples": [
+        {
+         "language": "shell",
+         "name": "cURL",
+         "code": "curl -i -X GET 'https://api.skyfire.xyz/api/v1/directory/services/search?commaDelimitedTags=seller,service'"
+        },
+        {
+         "language": "node",
+         "name": "",
+         "code": "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/directory/services/search?commaDelimitedTags=seller,service'\n);\nconsole.log(await res.json());"
+        },
+        {
+         "language": "python",
+         "name": "",
+         "code": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nconn.request(\"GET\", \"/api/v1/directory/services/search?commaDelimitedTags=seller,service\")\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+        }
+       ],
+       "samples-languages": [
+        "shell",
+        "node",
+        "python"
+       ]
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "headers": [],
+    "explorer-enabled": false,
+    "proxy-enabled": false
+   },
+   "x-readme-fauxas": true
+  }
+ },
+ {
+  "page": "https://docs.skyfire.xyz/reference/get-services-by-agent.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "title": "skyfire-service-directory-apis",
+    "version": "1.0"
+   },
+   "servers": [
+    {
+     "url": "https://api.skyfire.xyz"
+    }
+   ],
+   "components": {
+    "schemas": {
+     "DirectoryService": {
+      "type": "object",
+      "properties": {
+       "id": {
+        "type": "string",
+        "description": "Unique identifier of the service.",
+        "format": "uuid"
+       },
+       "name": {
+        "type": "string",
+        "description": "The name of the service."
+       },
+       "description": {
+        "type": "string",
+        "description": "The description of the service."
+       },
+       "tags": {
+        "type": "array",
+        "description": "The tags for this service. Empty if none were set.",
+        "items": {
+         "type": "string"
+        }
+       },
+       "type": {
+        "type": "string",
+        "description": "One of \"API\", \"WEB_PAGE\", \"VERIFIED_DOMAIN\", \"MCP_SERVER_LOCAL\", \"MCP_SERVER_REMOTE\", or \"FETCH_AGENT\"",
+        "enum": [
+         "API",
+         "WEB_PAGE",
+         "VERIFIED_DOMAIN",
+         "MCP_SERVER_LOCAL",
+         "MCP_SERVER_REMOTE",
+         "FETCH_AGENT"
+        ]
+       },
+       "price": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "priceModel": {
+        "type": "string",
+        "description": "One of \"PAY_PER_USE\", \"SUBSCRIPTION\", \"PAY_PER_MB\", or \"CUSTOM\"",
+        "enum": [
+         "PAY_PER_USE",
+         "SUBSCRIPTION",
+         "PAY_PER_MB",
+         "CUSTOM"
+        ]
+       },
+       "minimumTokenAmount": {
+        "type": "string",
+        "description": "USD as string."
+       },
+       "humanIdentityRequirement": {
+        "type": "object",
+        "description": "The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.",
+        "properties": {
+         "identityLevels": {
+          "type": "array",
+          "description": "Identity levels required from verified humans. e.g. `\"INDIVIDUAL_LEVEL2\"`.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "organization": {
+          "type": "array",
+          "description": "Organization identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         },
+         "individual": {
+          "type": "array",
+          "description": "Individual identity fields required.",
+          "items": {
+           "type": "string"
+          }
+         }
+        }
+       },
+       "seller": {
+        "type": "object",
+        "description": "The seller that owns this service.",
+        "properties": {
+         "id": {
+          "type": "string",
+          "description": "Unique identifier of the seller.",
+          "format": "uuid"
+         },
+         "name": {
+          "type": "string",
+          "description": "The name of the seller."
+         },
+         "identityLevel": {
+          "type": "string",
+          "description": "The seller's verified identity level, when available. e.g. `\"BUSINESS_LEVEL1\"`."
+         }
+        }
+       },
+       "openApiSpecUrl": {
+        "type": "string",
+        "description": "Present when `type` is API."
+       },
+       "websiteUrl": {
+        "type": "string",
+        "description": "Present when `type` is WEB_PAGE."
+       },
+       "fetchAgentProfileUrl": {
+        "type": "string",
+        "description": "Present when `type` is FETCH_AGENT."
+       },
+       "mcpServerUrl": {
+        "type": "string",
+        "description": "Present when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE."
+       },
+       "acceptedTokens": {
+        "type": "array",
+        "description": "Any of \"kya\", \"pay\", and/or \"kya-pay\".",
+        "items": {
+         "type": "string",
+         "enum": [
+          "kya",
+          "pay",
+          "kya-pay"
+         ]
+        }
+       },
+       "createdAt": {
+        "type": "string",
+        "description": "When the service was created.",
+        "format": "date-time"
+       },
+       "updatedAt": {
+        "type": "string",
+        "description": "When the service was last updated.",
+        "format": "date-time"
+       }
+      }
+     }
+    }
+   },
+   "security": [
+    {}
+   ],
+   "paths": {
+    "/api/v1/directory/agents/{agentId}/services": {
+     "get": {
+      "summary": "Get Services by Agent",
+      "description": "Get all of the services belonging to a single agent.",
+      "operationId": "get-services-by-agent",
+      "parameters": [
+       {
+        "in": "path",
+        "name": "agentId",
+        "required": true,
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        },
+        "description": "Unique identifier of the agent whose services you want to get. Must be a valid UUID. e.g. `\"98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7\"`"
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Ok",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "data": {
+             "type": "array",
+             "description": "The matching services.",
+             "items": {
+              "$ref": "#/components/schemas/DirectoryService"
+             }
+            }
+           }
+          },
+          "examples": {
+           "Ok": {
+            "summary": "Ok",
+            "value": {
+             "data": [
+              {
+               "id": "350d433d-6ed4-4482-bcfc-14b7da807f9b",
+               "name": "Fetch QA Seller Agent",
+               "description": "Fetch QA Seller Agent",
+               "tags": [],
+               "type": "FETCH_AGENT",
+               "price": "0.000001",
+               "priceModel": "PAY_PER_USE",
+               "minimumTokenAmount": "0.000001",
+               "humanIdentityRequirement": {
+                "identityLevels": [],
+                "organization": [],
+                "individual": []
+               },
+               "seller": {
+                "id": "98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7",
+                "name": "Fetch Agent Seller"
+               },
+               "fetchAgentProfileUrl": "https://agentverse.ai/agents/details/agent1qfmhmg4sa4azt0squ4za50k7t9pzwen0k6wsc0c6mxdertzq6hhjquhgvcy",
+               "acceptedTokens": [
+                "kya",
+                "pay",
+                "kya-pay"
+               ],
+               "createdAt": "2025-07-08T16:30:52.986Z",
+               "updatedAt": "2025-08-08T12:21:14.058Z"
+              }
+             ]
+            }
+           }
+          }
+         }
+        }
+       },
+       "422": {
+        "description": "Unprocessable Entity",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            },
+            "details": {
+             "type": "object",
+             "description": "Field-level validation errors, keyed by field name."
+            }
+           }
+          },
+          "examples": {
+           "Unprocessable Entity": {
+            "summary": "Unprocessable Entity",
+            "value": {
+             "code": "VALIDATION_ERROR",
+             "message": "Validation Error",
+             "details": {
+              "id": {
+               "message": "Must be a valid UUID"
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      },
+      "x-readme": {
+       "code-samples": [
+        {
+         "language": "shell",
+         "name": "cURL",
+         "code": "curl -i -X GET 'https://api.skyfire.xyz/api/v1/directory/agents/98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7/services'"
+        },
+        {
+         "language": "node",
+         "name": "",
+         "code": "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/directory/agents/98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7/services'\n);\nconsole.log(await res.json());"
+        },
+        {
+         "language": "python",
+         "name": "",
+         "code": "import http.client\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nconn.request(\"GET\", \"/api/v1/directory/agents/98755a15-bcbb-4e7c-a4ac-0ae21b9ce5c7/services\")\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+        }
+       ],
+       "samples-languages": [
+        "shell",
+        "node",
+        "python"
+       ]
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "headers": [],
+    "explorer-enabled": false,
+    "proxy-enabled": false
+   },
+   "x-readme-fauxas": true
+  }
+ }
+]

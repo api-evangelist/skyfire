@@ -1,8 +1,6 @@
 generated: '2026-07-21'
 method: searched
-source: >-
-  https://docs.skyfire.xyz/reference (environments, api-authentication,
-  http-error-status-codes) + observed JWKS
+source: https://docs.skyfire.xyz/reference (environments, api-authentication, http-error-status-codes) + observed JWKS
 standards:
 - id: jwt-rfc7519
   conforms: true
@@ -15,9 +13,7 @@ standards:
   evidence: Public verification keys published at issuer /.well-known/jwks.json.
 - id: oauth2-token-exchange-rfc8693
   conforms: partial
-  evidence: >-
-    KYAPay token exchange is specified in Skyfire's IETF drafts
-    (draft-skyfire-oauth-kyapay-token-exchange); not a core-API OAuth2 flow.
+  evidence: KYAPay token exchange is specified in Skyfire's IETF drafts (draft-skyfire-oauth-kyapay-token-exchange); not a core-API OAuth2 flow.
 - id: rfc9457-problem-details
   conforms: false
   evidence: Errors use a custom {code, message, details} envelope, not application/problem+json.
@@ -27,6 +23,18 @@ standards:
 - id: openid-connect
   conforms: false
   evidence: No /.well-known/openid-configuration published.
+- id: openapi-3.1
+  conforms: true
+  evidence: the document declares 3.1.0
+- id: oauth2
+  conforms: false
+  evidence: 'securitySchemes: sec0 (apiKey)'
+- id: rfc9457
+  conforms: false
+  evidence: no response declares application/problem+json
+- id: idempotency
+  conforms: false
+  evidence: no idempotency key parameter on mutating operations
 ietf_drafts:
 - draft-skyfire-oauth-kyapay-token
 - draft-skyfire-oauth-kyapay-token-exchange
@@ -34,7 +42,5 @@ ietf_drafts:
 - draft-skyfire-oauth-amr-values
 - draft-skyfire-oauth-id-verification
 - draft-skyfire-oauth-aml-methods
-notes: >-
-  No published third-party compliance certification program (SOC 2 / ISO 27001 /
-  PCI / HIPAA / FedRAMP) was found, so no Compliance pointer is emitted. Skyfire
-  is actively standardizing the KYAPay protocol via IETF drafts.
+notes: No published third-party compliance certification program (SOC 2 / ISO 27001 / PCI / HIPAA / FedRAMP) was found, so no Compliance pointer
+  is emitted. Skyfire is actively standardizing the KYAPay protocol via IETF drafts.
