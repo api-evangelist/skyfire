@@ -1,0 +1,1905 @@
+openapi: 3.2.0
+info:
+  title: skyfire-agent-and-token-apis Organizations API
+  version: '1.0'
+servers:
+- url: https://api.skyfire.xyz
+security:
+- sec0: []
+tags:
+- name: Organizations
+paths:
+  /api/v1/organizations/users:
+    post:
+      summary: Create Organization User
+      description: As an Organization Admin, create a new user in your organization.
+      operationId: create-enterprise-user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - role
+              properties:
+                email:
+                  type: string
+                  description: Email address of the new organization user. Must be unique within your organization. e.g. `chloe@gmail.com`
+                role:
+                  type: string
+                  description: Organization role for the new user. `MEMBER` creates a standard organization user. `ADMIN` creates an Organization Admin, which additionally returns `userApiKey` in the response.
+                  enum:
+                  - MEMBER
+                  - ADMIN
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                'Role: ADMIN':
+                  summary: 'Role: ADMIN'
+                  value:
+                    userId: 4da70647-e1f0-4508-bef0-8866bb7a3d01
+                    buyerAgent:
+                      id: c01fe0c7-517e-446e-88d5-b10d84974b87
+                      apiKey: e4661d3e-43a9-4d38-927c-ea7d2ff92403
+                    userApiKey: 60b664e7-8fc1-48bf-8362-83555e80b2bd
+                'Role: MEMBER':
+                  summary: 'Role: MEMBER'
+                  value:
+                    userId: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                    buyerAgent:
+                      id: 5d084831-4a11-4970-bf62-bb6fc0b9f3a2
+                      apiKey: aff074ee-ea8b-4643-bad1-913a534a5d7a
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                    description: Unique identifier of the newly created organization user.
+                  buyerAgent:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: 5d084831-4a11-4970-bf62-bb6fc0b9f3a2
+                        description: Unique identifier of the buyer agent.
+                      apiKey:
+                        type: string
+                        example: aff074ee-ea8b-4643-bad1-913a534a5d7a
+                        description: API key for the buyer agent. Returned only in this response and cannot be retrieved again, store it securely.
+                    description: Unique identifier of the buyer agent.
+                  userApiKey:
+                    type: string
+                    description: Organization Admin API key for the new user. Present only when `role` is `ADMIN`; for `MEMBER` the field is omitted from the body rather than returned as null. Returned only in this response and cannot be retrieved again, store it securely.
+                required:
+                - userId
+                - buyerAgent
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: Cannot create organization user. Organization user with email ada@example.com already exists
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: BAD_REQUEST
+                  message:
+                    type: string
+                    example: Cannot create organization user. Organization user with email ada@example.com already exists
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      request.email:
+                        message: Must be a valid email address
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      request.email:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid email address
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/organizations/users' \\\n  -H 'skyfire-api-key: 039695d8-bb96-408d-b31a-6afddf0c33cb' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"email\":\"chloe@gmail.com\",\"role\":\"MEMBER\"}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': '039695d8-bb96-408d-b31a-6afddf0c33cb',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({ email: 'chloe@gmail.com', role: 'MEMBER' })\n  }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': '039695d8-bb96-408d-b31a-6afddf0c33cb',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\"email\": \"chloe@gmail.com\", \"role\": \"MEMBER\"})\nconn.request(\"POST\", \"/api/v1/organizations/users\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Organizations
+    get:
+      summary: Get Organization Users
+      description: As an Organization Admin, list the users in your organization.
+      operationId: get_api-v1-organizations-users
+      parameters:
+      - in: query
+        name: pageSize
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        description: Number of users to return per page. Defaults to `100`, maximum `1000`. e.g. `50`
+      - in: query
+        name: pageCursor
+        schema:
+          type: string
+        description: Cursor for the next page, taken from `nextPageCursor` in the previous response. Results are ordered by email ascending, and the cursor is the email of the last user on the previous page. e.g. `"chloe@gmail.com"`
+      - in: query
+        name: filter
+        schema:
+          type: string
+        description: 'A JSON object, encoded as a string, restricting which users are returned. Conditions combine with AND. Must be valid JSON. Supported keys: `id`, `email`, `identifier`, `active`, `admin`, `orgMemberRole`. e.g. `filter={"orgMemberRole":"REPRESENTATIVE"}`'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrganizationUser'
+                  nextPageCursor:
+                    type: string
+                    description: Present when more users remain. Pass it back as `pageCursor` to fetch the next page.
+                required:
+                - data
+              examples:
+                More pages available:
+                  summary: More pages available
+                  value:
+                    data:
+                    - id: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                      organizationId: 1f6c2f8e-9a45-4f7b-bd21-3c0e5a9d7412
+                      email: chloe@gmail.com
+                      isAdmin: false
+                      orgMemberRole: MEMBER
+                      isActive: true
+                      agents: []
+                      createdAt: '2026-08-14T09:12:33.000Z'
+                    nextPageCursor: chloe@gmail.com
+                Single page:
+                  summary: Single page
+                  value:
+                    data:
+                    - id: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                      organizationId: 1f6c2f8e-9a45-4f7b-bd21-3c0e5a9d7412
+                      email: ada@example.com
+                      isAdmin: false
+                      orgMemberRole: MEMBER
+                      isActive: true
+                      agents:
+                      - agentId: 5d084831-4a11-4970-bf62-bb6fc0b9f3a2
+                        agentType: BUYER
+                        accounts:
+                        - accountId: 8b3d1e57-24af-4c69-9f0a-6d5e7b21c834
+                          network: base
+                          active: true
+                          suspended: false
+                          createdAt: '2026-08-14T09:12:33.000Z'
+                      createdAt: '2026-08-14T09:12:33.000Z'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                    description: ''
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: 'Invalid page size: 5000'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                    description: ''
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      pageSize:
+                        message: invalid float number
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/organizations/users?pageSize=50' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users?pageSize=50',\n  { headers: { 'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec0bf984-34f9-4e1e-a06e-984f3dfb089e''}
+
+            conn.request("GET", "/api/v1/organizations/users?pageSize=50", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Organizations
+  /api/v1/organizations/users/email/{email}:
+    get:
+      description: As an Organization Admin, fetch a single user in your organization by their exact email address.
+      parameters:
+      - in: path
+        name: email
+        required: true
+        schema:
+          type: string
+          format: email
+        description: Email address of the user. Exact match, case-insensitive. Must be URL-encoded. e.g. `ada%40example.com`
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUser'
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    id: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                    organizationId: 1f6c2f8e-9a45-4f7b-bd21-3c0e5a9d7412
+                    email: ada@example.com
+                    isAdmin: false
+                    orgMemberRole: MEMBER
+                    isActive: true
+                    agents:
+                    - agentId: 5d084831-4a11-4970-bf62-bb6fc0b9f3a2
+                      agentType: BUYER
+                      accounts:
+                      - accountId: 8b3d1e57-24af-4c69-9f0a-6d5e7b21c834
+                        network: base
+                        active: true
+                        suspended: false
+                        createdAt: '2026-08-14T09:12:33.000Z'
+                    createdAt: '2026-08-14T09:12:33.000Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      email:
+                        message: Must be a valid email address
+      operationId: get_api-v1-organizations-users-email
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/organizations/users/email/ada%40example.com' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e'"
+          language: shell
+          name: cURL
+        - code: "const email = encodeURIComponent('ada@example.com');\nconst res = await fetch(\n  `https://api.skyfire.xyz/api/v1/organizations/users/email/${email}`,\n  { headers: { 'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+            from urllib.parse import quote
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec0bf984-34f9-4e1e-a06e-984f3dfb089e''}
+
+            email = quote("ada@example.com", safe="")
+
+            conn.request("GET", f"/api/v1/organizations/users/email/{email}", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Get Organization User by Email
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}:
+    get:
+      description: As an Organization Admin, fetch a single user in your organization by their user ID.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the user. Must be a valid UUID. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationUser'
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    id: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                    organizationId: 1f6c2f8e-9a45-4f7b-bd21-3c0e5a9d7412
+                    email: ada@example.com
+                    isAdmin: false
+                    orgMemberRole: MEMBER
+                    isActive: true
+                    agents:
+                    - agentId: 5d084831-4a11-4970-bf62-bb6fc0b9f3a2
+                      agentType: BUYER
+                      accounts:
+                      - accountId: 8b3d1e57-24af-4c69-9f0a-6d5e7b21c834
+                        network: base
+                        active: true
+                        suspended: false
+                        createdAt: '2026-08-14T09:12:33.000Z'
+                    createdAt: '2026-08-14T09:12:33.000Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      userId:
+                        message: Must be a valid UUID
+      operationId: get_api-v1-organizations-users-userid
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483',\n  { headers: { 'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec0bf984-34f9-4e1e-a06e-984f3dfb089e''}
+
+            conn.request("GET", "/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Get Organization User by ID
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/activate:
+    patch:
+      summary: Set Organization User Status as Active
+      description: As an Organization Admin, reactivate a deactivated user in your organization.
+      operationId: patch_api-v1-organizations-users-userid-activate
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the organization user. Must be a user in your own organization. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      responses:
+        '204':
+          description: No Content. The user is active.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      userId:
+                        message: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X PATCH 'https://api.skyfire.xyz/api/v1/organizations/users/fda6e0ce-8869-4fd7-a55e-6ad0f77e2a69/activate' \\\n  -H 'skyfire-api-key: ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/fda6e0ce-8869-4fd7-a55e-6ad0f77e2a69/activate',\n  {\n    method: 'PATCH',\n    headers: { 'skyfire-api-key': 'ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4' }\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4''}
+
+            conn.request("PATCH", "/api/v1/organizations/users/fda6e0ce-8869-4fd7-a55e-6ad0f77e2a69/activate", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.status)  # 204'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/agents/seller:
+    post:
+      summary: Create Seller Agent
+      description: As an Organization Admin, create a seller agent for a user in your organization.
+      operationId: create-enterprise-user-2
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the organization user who will own the seller agent. Must be a user in your own organization. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - displayName
+              properties:
+                displayName:
+                  type: string
+                  description: Label for the new seller agent. Does not have to be unique. e.g. `"Chloe Cupcakes"`.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    id: b7c1f2a4-6d38-4e91-9c05-2f8ad4e7b613
+                    apiKey: d92e5c07-13ab-4f6e-8a24-71c0be3d9f45
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    example: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+                    description: Unique identifier of the created seller agent.
+                  apiKey:
+                    type: string
+                    description: API key for the seller agent. Returned only in this response and cannot be retrieved again, store it securely.
+                required:
+                - id
+                - apiKey
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: Agent already exists
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: BAD_REQUEST
+                  message:
+                    type: string
+                    example: Agent already exists
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      userId:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      userId:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/seller' \\\n  -H 'skyfire-api-key: 039695d8-bb96-408d-b31a-6afddf0c33cb' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"displayName\":\"Chloe Cupcakes\"}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/seller',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': '039695d8-bb96-408d-b31a-6afddf0c33cb',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({ displayName: 'Chloe Cupcakes' })\n  }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': '039695d8-bb96-408d-b31a-6afddf0c33cb',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\"displayName\": \"Chloe Cupcakes\"})\nconn.request(\"POST\", \"/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/seller\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys:
+    post:
+      description: As an Organization Admin, create a new API key for an agent belonging to a user in your organization.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the user who owns the agent. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      - in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the agent to create a key for. e.g. `"5d084831-4a11-4970-bf62-bb6fc0b9f3a2"`
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  maxLength: 1000
+                  description: Free-form label for the key, e.g. a rotation batch or environment name. At most 1000 characters.
+            examples:
+              With notes:
+                summary: With notes
+                value:
+                  notes: Q3 rotation
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier of the API key. Use this ID to activate or deactivate the key.
+                  apiKey:
+                    type: string
+                    description: The raw API key. Returned only in this response — it cannot be retrieved again.
+                  lastFour:
+                    type: string
+                    description: Last four characters of the key, for identifying it in listings.
+                  active:
+                    type: boolean
+                    description: Whether the key currently authenticates. Always `true` on creation.
+                  notes:
+                    type: string
+                    description: The label provided at creation. Omitted when none was set.
+                  createdAt:
+                    type: string
+                    description: When the key was created. e.g. `"2026-08-28T17:04:11.000Z"`.
+                required:
+                - id
+                - apiKey
+                - lastFour
+                - active
+                - createdAt
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    id: c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10
+                    apiKey: b7e9d2c4-8f13-4a6e-9c05-1d2b8e4a9f2c
+                    lastFour: 9f2c
+                    active: true
+                    notes: Q3 rotation
+                    createdAt: '2026-08-28T17:04:11.000Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                User not in your organization:
+                  summary: User not in your organization
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+                Agent not owned by the user, or inactive:
+                  summary: Agent not owned by the user, or inactive
+                  value:
+                    code: NOT_FOUND
+                    message: Agent not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      agentId:
+                        message: Must be a valid UUID
+      operationId: post_api-v1-organizations-users-userid-agents-agentid-api-keys
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"notes\":\"Q3 rotation\"}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({ notes: 'Q3 rotation' })\n  }\n);\nconst { apiKey } = await res.json(); // shown once — store it securely"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\"notes\": \"Q3 rotation\"})\nconn.request(\"POST\", \"/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Create Agent API Key
+      tags:
+      - Organizations
+    get:
+      description: As an Organization Admin, list the API keys of an agent belonging to a user in your organization.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the user who owns the agent. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      - in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the agent whose keys to list. e.g. `"5d084831-4a11-4970-bf62-bb6fc0b9f3a2"`
+      - in: query
+        name: pageSize
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 1000
+        description: Number of keys to return per page. Defaults to `100`, maximum `1000`. e.g. `50`
+      - in: query
+        name: pageCursor
+        schema:
+          type: string
+        description: Cursor for the next page, taken from `nextPageCursor` in the previous response. Results are ordered by creation time ascending, and the cursor is the ID of the last key on the previous page.
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Unique identifier of the API key. Use this ID to activate or deactivate the key.
+                        lastFour:
+                          type: string
+                          description: Last four characters of the key, for identification. The full key is never returned.
+                        active:
+                          type: boolean
+                          description: Whether the key currently authenticates.
+                        notes:
+                          type: string
+                          description: The label provided at creation. Omitted when none was set.
+                        createdAt:
+                          type: string
+                          description: When the key was created. e.g. `"2026-08-28T17:04:11.000Z"`.
+                      required:
+                      - id
+                      - lastFour
+                      - active
+                      - createdAt
+                  nextPageCursor:
+                    type: string
+                    description: Present when more keys remain. Pass it back as `pageCursor` to fetch the next page.
+                required:
+                - data
+              examples:
+                Single page:
+                  summary: Single page
+                  value:
+                    data:
+                    - id: d52e9a3c-7b4f-4c0d-9e2a-1f3b5c7d9e21
+                      lastFour: 77af
+                      active: false
+                      createdAt: '2026-05-11T08:22:45.000Z'
+                    - id: c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10
+                      lastFour: 9f2c
+                      active: true
+                      notes: Q3 rotation
+                      createdAt: '2026-08-28T17:04:11.000Z'
+                More pages available:
+                  summary: More pages available
+                  value:
+                    data:
+                    - id: d52e9a3c-7b4f-4c0d-9e2a-1f3b5c7d9e21
+                      lastFour: 77af
+                      active: false
+                      createdAt: '2026-05-11T08:22:45.000Z'
+                    nextPageCursor: d52e9a3c-7b4f-4c0d-9e2a-1f3b5c7d9e21
+          headers:
+            Link:
+              description: Present when more keys remain. Points at the next page with rel="next"; the same cursor is returned as nextPageCursor in the body.
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: 'Invalid pageCursor: expected the cursor returned by a previous page'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: Agent not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      pageSize:
+                        message: invalid float number
+      operationId: get_api-v1-organizations-users-userid-agents-agentid-api-keys
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys?pageSize=50' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys?pageSize=50',\n  { headers: { 'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec0bf984-34f9-4e1e-a06e-984f3dfb089e''}
+
+            conn.request("GET", "/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys?pageSize=50", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Get Agent API Keys
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys/{apiKeyId}/activate:
+    patch:
+      description: As an Organization Admin, re-enable a previously deactivated API key of an agent belonging to a user in your organization. Activating an already-active key is a no-op.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the user who owns the agent. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      - in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the agent the key belongs to. e.g. `"5d084831-4a11-4970-bf62-bb6fc0b9f3a2"`
+      - in: path
+        name: apiKeyId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the API key to activate, from the create or list responses. e.g. `"c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10"`
+      responses:
+        '204':
+          description: No Content. The key is active.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                User or agent not in your organization:
+                  summary: User or agent not in your organization
+                  value:
+                    code: NOT_FOUND
+                    message: Agent not found
+                API key not found under this agent:
+                  summary: API key not found under this agent
+                  value:
+                    code: NOT_FOUND
+                    message: No API key found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      apiKeyId:
+                        message: Must be a valid UUID
+      operationId: patch_api-v1-organizations-users-userid-agents-agentid-api-keys-apikeyid-activate
+      x-readme:
+        code-samples:
+        - code: "curl -i -X PATCH 'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys/c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10/activate' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys/c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10/activate',\n  {\n    method: 'PATCH',\n    headers: { 'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e' }\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec0bf984-34f9-4e1e-a06e-984f3dfb089e''}
+
+            conn.request("PATCH", "/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys/c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10/activate", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.status)  # 204'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Activate Agent API Key
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys/{apiKeyId}/deactivate:
+    patch:
+      description: As an Organization Admin, disable an API key of an agent belonging to a user in your organization so it no longer authenticates. Keys are never deleted and can be re-enabled later. Deactivating an already-inactive key is a no-op.
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the user who owns the agent. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      - in: path
+        name: agentId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the agent the key belongs to. e.g. `"5d084831-4a11-4970-bf62-bb6fc0b9f3a2"`
+      - in: path
+        name: apiKeyId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the API key to deactivate, from the create or list responses. e.g. `"c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10"`
+      responses:
+        '204':
+          description: No Content. The key is deactivated.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                User or agent not in your organization:
+                  summary: User or agent not in your organization
+                  value:
+                    code: NOT_FOUND
+                    message: Agent not found
+                API key not found under this agent:
+                  summary: API key not found under this agent
+                  value:
+                    code: NOT_FOUND
+                    message: No API key found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      apiKeyId:
+                        message: Must be a valid UUID
+      operationId: patch_api-v1-organizations-users-userid-agents-agentid-api-keys-apikeyid-deactivate
+      x-readme:
+        code-samples:
+        - code: "curl -i -X PATCH 'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys/c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10/deactivate' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys/c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10/deactivate',\n  {\n    method: 'PATCH',\n    headers: { 'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e' }\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec0bf984-34f9-4e1e-a06e-984f3dfb089e''}
+
+            conn.request("PATCH", "/api/v1/organizations/users/906fc259-ef0a-4736-bdcd-c1d5a78db483/agents/5d084831-4a11-4970-bf62-bb6fc0b9f3a2/api-keys/c41d8f2b-6a3e-4b9c-8d1f-0e2a4b6c8d10/deactivate", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.status)  # 204'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Deactivate Agent API Key
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/deactivate:
+    patch:
+      summary: Set Organization User Status as Inactive
+      description: As an Organization Admin, deactivate a user in your organization.
+      operationId: patch_api-v1-organizations-users-userid-deactivate
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the organization user. Must be a user in your own organization. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      responses:
+        '204':
+          description: No Content. The user is deactivated.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      userId:
+                        message: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X PATCH 'https://api.skyfire.xyz/api/v1/organizations/users/fda6e0ce-8869-4fd7-a55e-6ad0f77e2a69/deactivate' \\\n  -H 'skyfire-api-key: ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/fda6e0ce-8869-4fd7-a55e-6ad0f77e2a69/deactivate',\n  {\n    method: 'PATCH',\n    headers: { 'skyfire-api-key': 'ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4' }\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4''}
+
+            conn.request("PATCH", "/api/v1/organizations/users/fda6e0ce-8869-4fd7-a55e-6ad0f77e2a69/deactivate", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.status)  # 204'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Organizations
+  /api/v1/organizations/users/{userId}/personal-data:
+    post:
+      summary: Set Organization User Personal Data
+      description: As an Organization Admin, set personal data for a user in your organization.
+      operationId: create-enterprise-user-1
+      parameters:
+      - in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the organization user. Must be a user in your own organization. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - data
+              properties:
+                data:
+                  type: object
+                  description: Personal data for the user. Every field is optional.
+                  properties:
+                    person:
+                      type: object
+                      properties:
+                        firstName:
+                          type: string
+                          description: Given name. e.g. `"John"`.
+                        middleName:
+                          type: string
+                          description: Middle name. e.g. `"Rich"`.
+                        lastName:
+                          type: string
+                          description: Family name. e.g. `"Doe"`.
+                        birthdate:
+                          type: string
+                          description: Date of birth. e.g. `"1990-01-01"`
+                        ids:
+                          type: array
+                          items:
+                            properties:
+                              type:
+                                type: string
+                                description: Kind of identity document. e.g. `"SSN"`.
+                              number:
+                                type: string
+                                description: Document number. e.g. `"1234567890"`.
+                              issueDate:
+                                type: string
+                                description: Date the document was issued. e.g. `"2020-01-01"`.
+                              expirationDate:
+                                type: string
+                                description: Date the document expires. e.g. `"2025-01-01"`.
+                              issuingAuthority:
+                                type: string
+                                description: Authority that issued the document. e.g. `"SSN"`.
+                            type: object
+                          description: Identity documents belonging to the user.
+                      description: Name, date of birth, and identity documents.
+                    phoneNumbers:
+                      type: array
+                      items:
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - Mobile
+                            - Home
+                            - Work
+                            - Other
+                            description: Kind of phone number.
+                          countryCode:
+                            type: string
+                            description: Country calling code, without the leading plus. e.g. `"1"`.
+                          areaCode:
+                            type: string
+                            description: Area or city code. e.g. `"234"`.
+                          number:
+                            type: string
+                            description: Subscriber number. e.g. `"567890"`.
+                        type: object
+                      description: Phone numbers belonging to the user.
+                    emailAddresses:
+                      type: array
+                      items:
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - Personal
+                            - Work
+                            - Other
+                            description: Kind of email address.
+                          address:
+                            type: string
+                            description: The email address. e.g. `"john.doe@example.com"`.
+                        type: object
+                      description: Email addresses belonging to the user. Separate from the login email supplied when the user was created.
+                    addresses:
+                      type: array
+                      items:
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - Home
+                            - Work
+                            - Other
+                            description: Kind of address.
+                          street1:
+                            type: string
+                            description: First address line. e.g. `"123 Main St"`.
+                          street2:
+                            type: string
+                            description: Second address line. e.g. `"Apt 1"`.
+                          street3:
+                            type: string
+                            description: Third address line. e.g. `"Suite 100"`.
+                          city:
+                            type: string
+                            description: City or town. e.g. `"Anytown"`.
+                          state:
+                            type: string
+                            description: State, province, or region. e.g. `"CA"`.
+                          zip:
+                            type: string
+                            description: Postal code. e.g. `"12345"`.
+                          countryCode:
+                            type: string
+                            description: Country code. e.g. `"US"`.
+                          locale:
+                            type: string
+                            description: Locale associated with the address. e.g. `"en-US"`.
+                        type: object
+                      description: Postal addresses belonging to the user.
+            examples:
+              New Example:
+                summary: New Example
+                value:
+                  data:
+                    person:
+                      firstName: John
+                      middleName: Rich
+                      lastName: Doe
+                      birthdate: '1990-01-01'
+                      ids:
+                      - type: SSN
+                        number: '1234567890'
+                        issueDate: '2020-01-01'
+                        expirationDate: '2025-01-01'
+                        issuingAuthority: SSN
+                    phoneNumbers:
+                    - type: Mobile
+                      countryCode: '1'
+                      areaCode: '234'
+                      number: '567890'
+                    emailAddresses:
+                    - type: Personal
+                      address: john.doe@example.com
+                    addresses:
+                    - type: Home
+                      street1: 123 Main St
+                      street2: Apt 1
+                      street3: Suite 100
+                      city: Anytown
+                      state: CA
+                      zip: '12345'
+                      countryCode: US
+                      locale: en-US
+        required: true
+      responses:
+        '204':
+          description: No Content. The personal data is set.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                    description: ''
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: User is not active
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                    description: ''
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                    description: ''
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      userId:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                    description: ''
+                  details:
+                    type: object
+                    properties:
+                      userId:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/organizations/users/9414a52e-97ab-4d75-b139-39838e92e962/personal-data' \\\n  -H 'skyfire-api-key: f7c84201-46db-4362-974c-9a5be148e646' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"data\": {\n    \"person\": {\n      \"firstName\": \"John\",\n      \"middleName\": \"Rich\",\n      \"lastName\": \"Doe\",\n      \"birthdate\": \"1990-01-01\",\n      \"ids\": [\n        {\n          \"type\": \"SSN\",\n          \"number\": \"1234567890\",\n          \"issueDate\": \"2020-01-01\",\n          \"expirationDate\": \"2025-01-01\",\n          \"issuingAuthority\": \"SSN\"\n        }\n      ]\n    },\n    \"phoneNumbers\": [\n      {\n        \"type\": \"Mobile\",\n        \"countryCode\": \"1\",\n        \"areaCode\": \"234\",\n        \"number\": \"567890\"\n      }\n    ],\n    \"emailAddresses\": [\n      {\n        \"type\": \"Personal\",\n        \"address\": \"john.doe@example.com\"\n      }\n    ],\n    \"addresses\": [\n      {\n        \"type\": \"Home\",\n        \"street1\": \"123 Main St\",\n        \"street2\": \"Apt 1\",\n        \"street3\": \"Suite 100\",\n        \"city\": \"Anytown\",\n        \"state\": \"CA\",\n        \"zip\": \"12345\",\n        \"countryCode\": \"US\",\n        \"locale\": \"en-US\"\n      }\n    ]\n  }\n}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/organizations/users/9414a52e-97ab-4d75-b139-39838e92e962/personal-data',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': 'f7c84201-46db-4362-974c-9a5be148e646',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      data: {\n        person: {\n          firstName: 'John',\n          middleName: 'Rich',\n          lastName: 'Doe',\n          birthdate: '1990-01-01',\n          ids: [\n            {\n              type: 'SSN',\n              number: '1234567890',\n              issueDate: '2020-01-01',\n              expirationDate: '2025-01-01',\n              issuingAuthority: 'SSN'\n            }\n          ]\n        },\n        phoneNumbers: [\n          {\n            type: 'Mobile',\n            countryCode: '1',\n            areaCode: '234',\n            number: '567890'\n          }\n        ],\n        emailAddresses: [{ type: 'Personal', address: 'john.doe@example.com' }],\n        addresses: [\n          {\n            type: 'Home',\n            street1: '123 Main St',\n            street2: 'Apt 1',\n            street3: 'Suite 100',\n            city: 'Anytown',\n            state: 'CA',\n            zip: '12345',\n            countryCode: 'US',\n            locale: 'en-US'\n          }\n        ]\n      }\n    })\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': 'f7c84201-46db-4362-974c-9a5be148e646',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\n  \"data\": {\n    \"person\": {\n      \"firstName\": \"John\",\n      \"middleName\": \"Rich\",\n      \"lastName\": \"Doe\",\n      \"birthdate\": \"1990-01-01\",\n      \"ids\": [\n        {\n          \"type\": \"SSN\",\n          \"number\": \"1234567890\",\n          \"issueDate\": \"2020-01-01\",\n          \"expirationDate\": \"2025-01-01\",\n          \"issuingAuthority\": \"SSN\"\n        }\n      ]\n    },\n    \"phoneNumbers\": [\n      {\n        \"type\": \"Mobile\",\n        \"countryCode\": \"1\",\n        \"areaCode\": \"234\",\n        \"number\": \"567890\"\n      }\n    ],\n    \"emailAddresses\": [{\"type\": \"Personal\", \"address\": \"john.doe@example.com\"}],\n    \"addresses\": [\n      {\n        \"type\": \"Home\",\n        \"street1\": \"123 Main St\",\n        \"street2\": \"Apt 1\",\n        \"street3\": \"Suite 100\",\n        \"city\": \"Anytown\",\n        \"state\": \"CA\",\n        \"zip\": \"12345\",\n        \"countryCode\": \"US\",\n        \"locale\": \"en-US\"\n      }\n    ]\n  }\n})\nconn.request(\"POST\", \"/api/v1/organizations/users/9414a52e-97ab-4d75-b139-39838e92e962/personal-data\", payload, headers)\nres = conn.getresponse()\nprint(res.status)  # 204"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Organizations
+components:
+  schemas:
+    OrganizationUser:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the organization user.
+        organizationId:
+          type: string
+          description: Unique identifier of the organization the user belongs to. Always your own organization.
+        email:
+          type: string
+          description: Email address of the user.
+        isAdmin:
+          type: boolean
+          description: Whether the user has Organization Admin privileges.
+        orgMemberRole:
+          type: string
+          description: Role of the user within the organization.
+          enum:
+          - ADMIN
+          - MEMBER
+          - REPRESENTATIVE
+        isActive:
+          type: boolean
+          description: Whether the user is active. Inactive users cannot authenticate, and neither can their agents.
+        agents:
+          type: array
+          description: Agents owned by the user. Empty if the user owns none.
+          items:
+            type: object
+            properties:
+              agentId:
+                type: string
+                description: Unique identifier of the agent.
+              agentType:
+                type: string
+                description: Whether the agent is a buyer or a seller.
+                enum:
+                - BUYER
+                - SELLER
+              accounts:
+                type: array
+                description: Accounts belonging to the agent.
+                items:
+                  type: object
+                  properties:
+                    accountId:
+                      type: string
+                      description: Unique identifier of the account.
+                    network:
+                      type: string
+                      description: Network the account is held on. e.g. `"base"`.
+                    active:
+                      type: boolean
+                      description: Whether the account is active.
+                    suspended:
+                      type: boolean
+                      description: Whether the account is suspended.
+                    createdAt:
+                      type: string
+                      description: When the account was created. e.g. `"2026-08-14T09:12:33.000Z"`.
+                  required:
+                  - accountId
+                  - network
+                  - active
+                  - suspended
+                  - createdAt
+            required:
+            - agentId
+            - agentType
+        createdAt:
+          type: string
+          description: When the user was created. e.g. `"2026-08-14T09:12:33.000Z"`.
+      required:
+      - id
+      - organizationId
+      - email
+      - isAdmin
+      - orgMemberRole
+      - isActive
+      - createdAt
+  securitySchemes:
+    sec0:
+      type: apiKey
+      name: skyfire-api-key
+      in: header
+x-readme-fauxas: true
+x-provenance:
+  method: searched
+  source: https://docs.skyfire.xyz/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.skyfire.xyz/reference/activate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/activate-agents-service.md
+  - https://docs.skyfire.xyz/reference/charge-token.md
+  - https://docs.skyfire.xyz/reference/create-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/create-agents-service.md
+  - https://docs.skyfire.xyz/reference/create-organization-user-session-token.md
+  - https://docs.skyfire.xyz/reference/create-organization-user.md
+  - https://docs.skyfire.xyz/reference/create-seller-agent.md
+  - https://docs.skyfire.xyz/reference/create-token.md
+  - https://docs.skyfire.xyz/reference/deactivate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/deactivate-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agent-api-keys.md
+  - https://docs.skyfire.xyz/reference/get-agents-seller-services-all.md
+  - https://docs.skyfire.xyz/reference/get-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/get-agents-wallet-balance.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-email.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-id.md
+  - https://docs.skyfire.xyz/reference/get-organization-users.md
+  - https://docs.skyfire.xyz/reference/get-token-charges.md
+  - https://docs.skyfire.xyz/reference/introspect-token.md
+  - https://docs.skyfire.xyz/reference/set-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-active.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-inactive.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-personal-data.md
+  - https://docs.skyfire.xyz/reference/update-agents-service.md
+  merge:
+    pages: 26
+    deduped: 29
+    conflicts_kept_first: 0

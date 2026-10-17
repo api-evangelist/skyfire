@@ -1,0 +1,63 @@
+{
+  "provider": "skyfire",
+  "sources": [
+    "skyfire-agent-and-token-apis-openapi.yml",
+    "skyfire-service-directory-apis-openapi.yml"
+  ],
+  "outputs": [
+    "skyfire-agents-api-openapi.yml",
+    "skyfire-auth-api-openapi.yml",
+    "skyfire-organizations-api-openapi.yml",
+    "skyfire-tokens-api-openapi.yml",
+    "skyfire-directory-api-openapi.yml"
+  ],
+  "archived": [
+    "archived openapi/skyfire-agent-and-token-apis-openapi.yml",
+    "archived openapi/skyfire-service-directory-apis-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "skyfire-agent-and-token-apis-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/agents/balance -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/agents/seller-services -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/agents/seller-services -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/agents/seller-services/{sellerServiceId} -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths PATCH /api/v1/agents/seller-services/{sellerServiceId} -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/agents/seller-services/{sellerServiceId}/activate -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/agents/seller-services/{sellerServiceId}/deactivate -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/agents/source-ips -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths PUT /api/v1/agents/source-ips -> Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/auth/skyfire-session-token -> Auth",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/organizations/users -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/organizations/users -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/organizations/users/email/{email} -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/organizations/users/{userId} -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths PATCH /api/v1/organizations/users/{userId}/activate -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/organizations/users/{userId}/agents/seller -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths PATCH /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys/{apiKeyId}/activate -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths PATCH /api/v1/organizations/users/{userId}/agents/{agentId}/api-keys/{apiKeyId}/deactivate -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths PATCH /api/v1/organizations/users/{userId}/deactivate -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/organizations/users/{userId}/personal-data -> Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/tokens -> Tokens",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/tokens/charge -> Tokens",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths POST /api/v1/tokens/introspect -> Tokens",
+    "skyfire-agent-and-token-apis-openapi.yml: tagged paths GET /api/v1/tokens/{tokenId}/charges -> Tokens",
+    "skyfire-agent-and-token-apis-openapi.yml: declared missing tag: Agents",
+    "skyfire-agent-and-token-apis-openapi.yml: declared missing tag: Auth",
+    "skyfire-agent-and-token-apis-openapi.yml: declared missing tag: Organizations",
+    "skyfire-agent-and-token-apis-openapi.yml: declared missing tag: Tokens",
+    "skyfire-service-directory-apis-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "skyfire-service-directory-apis-openapi.yml: tagged paths GET /api/v1/directory/agents/{agentId}/services -> Directory",
+    "skyfire-service-directory-apis-openapi.yml: tagged paths GET /api/v1/directory/services -> Directory",
+    "skyfire-service-directory-apis-openapi.yml: tagged paths GET /api/v1/directory/services/search -> Directory",
+    "skyfire-service-directory-apis-openapi.yml: tagged paths GET /api/v1/directory/services/{serviceId} -> Directory",
+    "skyfire-service-directory-apis-openapi.yml: tagged paths GET /api/v1/directory/tags -> Directory",
+    "skyfire-service-directory-apis-openapi.yml: declared missing tag: Directory",
+    "apis.yml register: written (+5 apis, 6 total)"
+  ],
+  "skipped": []
+}

@@ -1,12 +1,13 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: skyfire-service-directory-apis
+  title: skyfire-service--apis Directory API
   version: '1.0'
 servers:
 - url: https://api.skyfire.xyz
 security:
 - {}
-x-readme-fauxas: true
+tags:
+- name: Directory
 paths:
   /api/v1/directory/agents/{agentId}/services:
     get:
@@ -108,6 +109,8 @@ paths:
         - shell
         - node
         - python
+      tags:
+      - Directory
   /api/v1/directory/services:
     get:
       summary: Get All Services
@@ -269,6 +272,8 @@ paths:
         - shell
         - node
         - python
+      tags:
+      - Directory
   /api/v1/directory/services/search:
     get:
       summary: Get Services by Tags
@@ -451,6 +456,8 @@ paths:
         - shell
         - node
         - python
+      tags:
+      - Directory
   /api/v1/directory/services/{serviceId}:
     get:
       summary: Get Service
@@ -544,6 +551,8 @@ paths:
         - shell
         - node
         - python
+      tags:
+      - Directory
   /api/v1/directory/tags:
     get:
       summary: Get All Service Tags
@@ -610,6 +619,8 @@ paths:
         - shell
         - node
         - python
+      tags:
+      - Directory
 components:
   schemas:
     DirectoryService:
@@ -716,6 +727,7 @@ components:
           type: string
           description: When the service was last updated.
           format: date-time
+x-readme-fauxas: true
 x-provenance:
   method: searched
   source: https://docs.skyfire.xyz/reference

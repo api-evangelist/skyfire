@@ -1,0 +1,644 @@
+openapi: 3.2.0
+info:
+  title: skyfire-agent-and-token-apis Tokens API
+  version: '1.0'
+servers:
+- url: https://api.skyfire.xyz
+security:
+- sec0: []
+tags:
+- name: Tokens
+paths:
+  /api/v1/tokens:
+    post:
+      summary: Create Token
+      description: Create a `kya`, `pay`, or `kya-pay` token as a buyer agent.
+      operationId: create-token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - type
+              properties:
+                type:
+                  type: string
+                  description: One of `kya`, `pay`, or `kya-pay`. The created token will contain JWT header `typ` set to `<type>+jwt`.
+                buyerTag:
+                  type: string
+                  description: Buyer’s internal identifier for the token. e.g. "research-agent-xyz"
+                tokenAmount:
+                  type: string
+                  description: 'The amount of funds in currency units allocated to the token. Determines the maximum amount the seller can charge. Must include if this is a `pay`or `kya-pay` token. For successful token creation, this value must be:
+
+                    - Greater than 0
+
+                    - Less than or equal to the buyer agent wallet balance
+
+                    - Greater than or equal to the seller service minimum token amount (if applicable)
+
+
+                    If these conditions are not met, the token creation request will fail.'
+                sellerServiceId:
+                  type: string
+                  description: ID of an onboarded seller service. Obtain this from the Skyfire Directory. Required when creating a token for an onboarded seller.
+                sellerDomainOrUrl:
+                  type: string
+                  description: Domain name or full URL of an external seller. The buyer agent must belong to an organization and authenticate using an Organization Buyer API Key. Required when creating a token for an external seller.
+                expiresAt:
+                  type: integer
+                  description: 'Unix timestamp (seconds) representing when the token expires. Provide an absolute epoch time, not a relative duration. If omitted, defaults to the maximum allowed lifetimes:
+
+                    * 24 hours from now when using `sellerServiceId`
+
+                    * 5 minutes from now when using `sellerDomainOrUrl`
+
+
+                    Must be between 10s and the maximum allowed lifetime for the selected target type.'
+                  format: int64
+                identityPermissions:
+                  type: array
+                  description: 'Default: empty array. Can be specified if this is a `kya` or `kya-pay` token. Additional identity fields to include in the token. See https://docs.skyfire.xyz/reference/identity-fields for more info.'
+                  items:
+                    type: string
+            examples:
+              Create a token to an Onboarded Seller:
+                summary: Create a token to an Onboarded Seller
+                value:
+                  type: kya-pay
+                  buyerTag: efd8a6ee-c7b6-4d26-9e5c-3b5e9c180df6
+                  tokenAmount: '0.005'
+                  sellerServiceId: 350d433d-6ed4-4482-bcfc-14b7da807f9b
+                  expiresAt: 1752919200
+              Create a token to an External Seller:
+                summary: Create a token to an External Seller
+                value:
+                  type: kya
+                  buyerTag: efd8a6ee-c7b6-4d26-9e5c-3b5e9c180df6
+                  sellerDomainOrUrl: https://kyapaynews.com
+                  expiresAt: 1763769321
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    token: eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJreWErcGF5K0pXVCJ9.eyJlbnYiOiJxYSIsImJ0ZyI6ImVmZDhhNmVlLWM3YjYtNGQyNi05ZTVjLTNiNWU5YzE4MGRmNiIsInNzaSI6IjM1MGQ0MzNkLTZlZDQtNDQ4Mi1iY2ZjLTE0YjdkYTgwN2Y5YiIsImJpZCI6eyJuYW1lRmlyc3QiOiJBTEVYQU5ERVIgSiIsIm5hbWVNaWRkbGUiOiJudWxsIiwibmFtZUxhc3QiOiJTQU1QTEUiLCJiaXJ0aGRhdGUiOiIxOTc3LTA3LTE3IiwicGhvbmVOdW1iZXIiOiIrMTgxNjY2ODMwMzUiLCJzZWxlY3RlZENvdW50cnlDb2RlIjoiVVMiLCJzZWxlY3RlZElkQ2xhc3MiOiJkbCIsImlzc3VlRGF0ZSI6IjIwMjQtMDctMTgiLCJpc3N1aW5nQXV0aG9yaXR5IjoiQ0EiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMzAtMDctMTgiLCJhZGRyZXNzU3RyZWV0MSI6IjYwMCBDQUxJRk9STklBIFNUUkVFVCIsImFkZHJlc3NTdHJlZXQyIjoibnVsbCIsImFkZHJlc3NDaXR5IjoiU0FOIEZSQU5DSVNDTyIsImFkZHJlc3NTdWJkaXZpc2lvbiI6IkNBIiwiYWRkcmVzc1Bvc3RhbENvZGUiOiI5NDEwOSIsImFkZHJlc3NDb3VudHJ5Q29kZSI6IlVTIiwic2t5ZmlyZUVtYWlsIjoiYW5raXRAc2t5ZmlyZS54eXoifSwiYWlkIjpudWxsLCJ2YWx1ZSI6IjUwMDAiLCJhbW91bnQiOiIwLjAwNSIsInNwcyI6IlBBWV9QRVJfVVNFIiwic3ByIjoiMC4wMDAwMDEiLCJtbnIiOjUwMDAsImN1ciI6IlVTRCIsImlhdCI6MTc1Mjg0MzM1MCwiaXNzIjoiaHR0cHM6Ly9hcHAtcWEuc2t5ZmlyZS54eXoiLCJqdGkiOiIxMThhMTUyNi0xMWVhLTRjNzctODNiMS0yODdlN2MwMWJmZGEiLCJhdWQiOiI5ODc1NWExNS1iY2JiLTRlN2MtYTRhYy0wYWUyMWI5Y2U1YzciLCJzdWIiOiI0MjVhMzk0Yi01ZWE1LTRmNjUtOTU2NS0zNjBlYTg1NDU2NWEiLCJleHAiOjE3NTI5MTkyMDB9.1MWp5Fj4RTUs-ckOfyXDWzPy1pNl951ZvyGzVdLznUrjRPBKwbIky4OYlo3JMyFu9glaTCrjNn-PnNpwGLO8pQ
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: The signed JWT for the token.
+                required:
+                - token
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Subscription Required
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: NOT_AUTHORIZED
+                  message:
+                    type: string
+                    example: Subscription Required
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: integer
+                        description: HTTP status code.
+                      message:
+                        type: string
+                        description: Human-readable error message.
+                      payment_details:
+                        type: object
+                        properties:
+                          reason:
+                            type: string
+                            description: Why payment is required.
+                          network:
+                            type: string
+                            description: Payment network.
+                          payment_type:
+                            type: string
+                            description: Payment type.
+              examples:
+                Payment Required:
+                  summary: Payment Required
+                  value:
+                    error:
+                      code: 402
+                      message: Payment Required
+                      payment_details:
+                        reason: Insufficient balance to access this resource.
+                        network: skyfire
+                        payment_type: per_usage
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      paymentInfo.type:
+                        message: '''type'' is required'
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      paymentInfo.type:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: '''type'' is required'
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/tokens' \\\n  -H 'skyfire-api-key: a27829f9-5db7-4f18-938d-5d323278f773' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"type\": \"kya-pay\",\n  \"buyerTag\": \"research-agent-xyz\",\n  \"tokenAmount\": \"0.005\",\n  \"sellerServiceId\": \"350d433d-6ed4-4482-bcfc-14b7da807f9b\",\n  \"expiresAt\": 1752919200\n}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/tokens',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': 'a27829f9-5db7-4f18-938d-5d323278f773',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      type: 'kya-pay',\n      buyerTag: 'research-agent-xyz',\n      tokenAmount: '0.005',\n      sellerServiceId: '350d433d-6ed4-4482-bcfc-14b7da807f9b',\n      expiresAt: 1752919200\n    })\n  }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': 'a27829f9-5db7-4f18-938d-5d323278f773',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\n  \"type\": \"kya-pay\",\n  \"buyerTag\": \"research-agent-xyz\",\n  \"tokenAmount\": \"0.005\",\n  \"sellerServiceId\": \"350d433d-6ed4-4482-bcfc-14b7da807f9b\",\n  \"expiresAt\": 1752919200\n})\nconn.request(\"POST\", \"/api/v1/tokens\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Tokens
+  /api/v1/tokens/charge:
+    post:
+      summary: Charge Token
+      description: Charge a `pay` or `kya-pay` token as a seller agent or seller service.
+      operationId: charge-token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  type: string
+                  description: 'The complete, signed JWT string received from the buyer agent.
+
+                    '
+                chargeAmount:
+                  type: string
+                  description: 'The amount to charge from the token. Required unless the seller service uses the `pay_per_use` pricing model, in which case Skyfire automatically charges the configured service price when omitted.
+
+                    Tokens may be charged multiple times until their balance is exhausted.
+
+                    When provided, `chargeAmount` must:
+
+                    - Be greater than 0
+
+                    - Be less than or equal to the token''s original `tokenAmount`
+
+                    - Be less than or equal to the token''s remaining balance
+
+
+                    A charge that exceeds the remaining balance will fail.'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    amountCharged: '0.01'
+                    remainingBalance: '0.01'
+              schema:
+                type: object
+                properties:
+                  amountCharged:
+                    type: string
+                    example: '0.01'
+                    description: The amount successfully charged from the token.
+                  remainingBalance:
+                    type: string
+                    example: '0.01'
+                    description: The amount remaining on the token after the charge is processed.
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value: "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n    <meta charset=\"utf-8\">\n    <title>Error</title>\n</head>\n\n<body>\n    <pre>Bad Request</pre>\n</body>\n\n</html>"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: invalid or expired jwt
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: NOT_AUTHORIZED
+                  message:
+                    type: string
+                    example: invalid or expired jwt
+        '402':
+          description: Payment Required
+          content:
+            application/json:
+              examples:
+                Payment Required:
+                  summary: Payment Required
+                  value:
+                    code: PAYMENT_ERROR
+                    message: Invalid charge amount (must be less than token value)
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: PAYMENT_ERROR
+                  message:
+                    type: string
+                    example: Invalid charge amount (must be less than token value)
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/tokens/charge' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bf5-b8c44bf4a155' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJreWErcGF5K0pXVCJ9.eyJlbnYiOiJxYSIsImJ0ZyI6ImVmZDhhNmVlLWM3YjYtNGQyNi05ZTVjLTNiNWU5YzE4MGRmNiIsInNzaSI6IjM1ZGZjMjc3LTMwMWQtNDQ3Yy04YzQ5LTU5NGM5ZDU5MjMyZiIsImJpZCI6eyJiaXJ0aGRhdGUiOiIxOTc3LTA3LTE3Iiwic2t5ZmlyZUVtYWlsIjoiYW5raXRAc2t5ZmlyZS54eXoifSwiYWlkIjpudWxsLCJ2YWx1ZSI6IjIwMDAwIiwiYW1vdW50IjoiMC4wMiIsInNwcyI6IlBBWV9QRVJfVVNFIiwic3ByIjoiMC4wMiIsIm1uciI6MSwiY3VyIjoiVVNEIiwiaWF0IjoxNzUyODQzNjMwLCJpc3MiOiJodHRwczovL2FwcC1xYS5za3lmaXJlLnh5eiIsImp0aSI6IjU1YWVkZDQ1LTQzMTktNDM0MS1iYTJmLTkwODYyNDI2ODFiZiIsImF1ZCI6ImE4ZTQ5ZWVhLWFjN2ItNDFmMi1hYTc0LTg0ZmI4NmFkNDBiYyIsInN1YiI6IjQyNWEzOTRiLTVlYTUtNGY2NS05NTY1LTM2MGVhODU0NTY1YSIsImV4cCI6MTc1MjkxOTIwMH0.zHvsiQr1xbBFAkiQ_wOGM1aBFEbRxL14GvNHoDUCjkZN6TUN4h1NDrtvF02yqbRlDyoQcx4voaZbRIG0Ji32_g\",\n  \"chargeAmount\": \"0.01\"\n}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/tokens/charge',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      token: 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJreWErcGF5K0pXVCJ9.eyJlbnYiOiJxYSIsImJ0ZyI6ImVmZDhhNmVlLWM3YjYtNGQyNi05ZTVjLTNiNWU5YzE4MGRmNiIsInNzaSI6IjM1ZGZjMjc3LTMwMWQtNDQ3Yy04YzQ5LTU5NGM5ZDU5MjMyZiIsImJpZCI6eyJiaXJ0aGRhdGUiOiIxOTc3LTA3LTE3Iiwic2t5ZmlyZUVtYWlsIjoiYW5raXRAc2t5ZmlyZS54eXoifSwiYWlkIjpudWxsLCJ2YWx1ZSI6IjIwMDAwIiwiYW1vdW50IjoiMC4wMiIsInNwcyI6IlBBWV9QRVJfVVNFIiwic3ByIjoiMC4wMiIsIm1uciI6MSwiY3VyIjoiVVNEIiwiaWF0IjoxNzUyODQzNjMwLCJpc3MiOiJodHRwczovL2FwcC1xYS5za3lmaXJlLnh5eiIsImp0aSI6IjU1YWVkZDQ1LTQzMTktNDM0MS1iYTJmLTkwODYyNDI2ODFiZiIsImF1ZCI6ImE4ZTQ5ZWVhLWFjN2ItNDFmMi1hYTc0LTg0ZmI4NmFkNDBiYyIsInN1YiI6IjQyNWEzOTRiLTVlYTUtNGY2NS05NTY1LTM2MGVhODU0NTY1YSIsImV4cCI6MTc1MjkxOTIwMH0.zHvsiQr1xbBFAkiQ_wOGM1aBFEbRxL14GvNHoDUCjkZN6TUN4h1NDrtvF02yqbRlDyoQcx4voaZbRIG0Ji32_g',\n      chargeAmount: '0.01'\n    })\n  }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\n  \"token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJreWErcGF5K0pXVCJ9.eyJlbnYiOiJxYSIsImJ0ZyI6ImVmZDhhNmVlLWM3YjYtNGQyNi05ZTVjLTNiNWU5YzE4MGRmNiIsInNzaSI6IjM1ZGZjMjc3LTMwMWQtNDQ3Yy04YzQ5LTU5NGM5ZDU5MjMyZiIsImJpZCI6eyJiaXJ0aGRhdGUiOiIxOTc3LTA3LTE3Iiwic2t5ZmlyZUVtYWlsIjoiYW5raXRAc2t5ZmlyZS54eXoifSwiYWlkIjpudWxsLCJ2YWx1ZSI6IjIwMDAwIiwiYW1vdW50IjoiMC4wMiIsInNwcyI6IlBBWV9QRVJfVVNFIiwic3ByIjoiMC4wMiIsIm1uciI6MSwiY3VyIjoiVVNEIiwiaWF0IjoxNzUyODQzNjMwLCJpc3MiOiJodHRwczovL2FwcC1xYS5za3lmaXJlLnh5eiIsImp0aSI6IjU1YWVkZDQ1LTQzMTktNDM0MS1iYTJmLTkwODYyNDI2ODFiZiIsImF1ZCI6ImE4ZTQ5ZWVhLWFjN2ItNDFmMi1hYTc0LTg0ZmI4NmFkNDBiYyIsInN1YiI6IjQyNWEzOTRiLTVlYTUtNGY2NS05NTY1LTM2MGVhODU0NTY1YSIsImV4cCI6MTc1MjkxOTIwMH0.zHvsiQr1xbBFAkiQ_wOGM1aBFEbRxL14GvNHoDUCjkZN6TUN4h1NDrtvF02yqbRlDyoQcx4voaZbRIG0Ji32_g\",\n  \"chargeAmount\": \"0.01\"\n})\nconn.request(\"POST\", \"/api/v1/tokens/charge\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        - code: "  // JWT verification\n  const JWKS = createRemoteJWKSet(new URL(JWKS_URL));\n  try {\n    const { protectedHeader } = await jwtVerify(skyfireToken, JWKS, {\n      issuer: JWT_ISSUER,\n      audience: JWT_AUDIENCE,\n      algorithms: [JWT_ALGORITHM]\n    });\n    decodedHeader = protectedHeader;\n  } catch (err) {\n    console.error('Error while verifying token: ' + err);\n\n    if (err instanceof errors.JOSEError) {\n      return Response.json(\n        {\n          error: `Your JWT token is invalid`,\n          errorCode: err.code,\n          message: err.message\n        },\n        { status: 401 }\n      );\n    }\n\n    return Response.json(\n      { error: `Something went wrong while verifying your JWT token` },\n      { status: 401 }\n    );\n  }\n\n  let decodedToken;\n  try {\n    decodedToken = jwtDecode(skyfireToken);\n  } catch (err) {\n    console.error('Error while decoding token: ' + err);\n\n    return Response.json({ error: 'Invalid JWT token' }, { status: 401 });\n  }\n\n  /**\n   * Charge Token\n   */\n  if (decodedHeader.typ === 'kya-pay+JWT' || decodedHeader.typ === 'pay+JWT') {\n    try {\n      const response = await chargeToken(skyfireToken);\n      responseMessage.push(response);\n    } catch (err) {\n      console.error('Error while charging token: ' + err);\n\n      return Response.json(\n        {\n          error: `Couldn't charge your ${getTokenInfo(skyfireToken)} token`,\n          message: err instanceof Error ? err.message : 'Unknown error'\n        },\n        { status: 400 }\n      );\n    }\n  }\n\n  const chargeToken = async (skyfireToken: string) => {\n  let response;\n\n  try {\n    response = await fetch(`${SKYFIRE_API_URL}/api/v1/tokens/charge`, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'skyfire-api-key': <Skyfire Seller Agent API Key>,\n      },\n      body: JSON.stringify({\n        token: skyfireToken,\n        chargeAmount: AMOUNT_TO_CHARGE\n      })\n    });\n  } catch (err) {\n    console.error('Error while charging token: ' + err);\n    throw new Error(\n      err instanceof Error ? err.message : 'Unknown error while charging token'\n    );\n  }\n\n  const res: {\n    amountCharged: string;\n    remainingBalance: string;\n  } = await response.json();\n\n};\n"
+          language: node
+          name: Verify and charge
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Tokens
+  /api/v1/tokens/introspect:
+    post:
+      summary: Introspect Token
+      description: Check whether a token is currently usable and get the remaining balance as a buyer or seller agent.
+      operationId: introspect-token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - token
+              properties:
+                token:
+                  type: string
+                  description: 'The complete JWT string as issued to the buyer, not a `tokenId`. Can be of any token type: `kya`, `pay`, or `kya-pay`.'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Invalid token:
+                  summary: Invalid token
+                  value:
+                    isValid: false
+                    validationError: invalid or expired jwt
+                Valid pay/kya-pay token:
+                  summary: Valid pay/kya-pay token
+                  value:
+                    chargeableUntil: 1774036197.827
+                    expiresAt: 1773949797.827
+                    isValid: true
+                    remainingBalance: '0.001'
+                Valid kya token:
+                  summary: Valid kya token
+                  value:
+                    expiresAt: 1773952576.644
+                    isValid: true
+              schema:
+                oneOf:
+                - type: object
+                  properties:
+                    expiresAt:
+                      type: number
+                      description: Unix timestamp (seconds) after which the token expires; the token's `exp` claim.
+                    isValid:
+                      type: boolean
+                      description: Whether the token passed introspection. `true` for up to 24 hours past `expiresAt` (settlement grace period).
+                    validationError:
+                      type: string
+                      description: 'Present only when `isValid: false`. Human-readable, not a stable error code. Cases include: unparseable JWT, unknown token id, bad signature, past hold expiry, caller not a party to the token, malformed claims (`aud`/`sub`/`ssi`/`typ`), seller service inactive or unapproved, missing external seller or merchant account, wallet/address/network mismatch, balance-lookup failure. Unrecognized errors fall back to `Token is invalid or not found`.'
+                  required:
+                  - expiresAt
+                  - isValid
+                  title: kya tokens
+                - type: object
+                  properties:
+                    chargeableUntil:
+                      type: number
+                      description: Unix timestamp (seconds) after which the token can no longer be charged.
+                    expiresAt:
+                      type: number
+                      description: Unix timestamp (seconds) after which the token expires; the token's `exp` claim.
+                    isValid:
+                      type: boolean
+                      description: Whether the token passed introspection. `true` until `chargeableUntil`.
+                    remainingBalance:
+                      type: string
+                      description: Funds left on the token as a decimal string.
+                    validationError:
+                      type: string
+                      description: 'Present only when `isValid: false`. Human-readable, not a stable error code. Cases include: unparseable JWT, unknown token id, bad signature, past hold expiry, caller not a party to the token, malformed claims (`aud`/`sub`/`ssi`/`typ`), seller service inactive or unapproved, missing external seller or merchant account, wallet/address/network mismatch, balance-lookup failure. Unrecognized errors fall back to `Token is invalid or not found`.'
+                  required:
+                  - chargeableUntil
+                  - expiresAt
+                  - isValid
+                  - remainingBalance
+                  title: pay, kya-pay tokens
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/tokens/introspect' \\\n  -H 'skyfire-api-key: 1fd8543f-0fc6-4f80-9b6e-09f9eecbbdf5' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJwYXkrSldUIa9.eyJlbnYiOiJwcm9kdWN0aW9uIiwiYnRnIjoiUGxheWdyb3VuZC02anlqbzNrejZoNiIsInNzaSI6IjIyM2JjM2ViLTliY2ItNGU5Yi1hZmQ2LWYyNmVlMGJkMzg5NCIsInZhbHVlIjoiNTAwMCIsImFtb3VudCI6IjAuMDA1Iiwic3BzIjoiUEFZX1BFUl9VU0UiLCJzcHIiOiIwLjAwMDAwMSIsIm1uciI6NTAwMCwiY3VyIjoiVVNEIiwiaWF0IjoxNzUzNDY2MDMzLCJpc3MiOiJodHRwczovL2FwcC5za3lmaXJlLnh5eiIsImp0aSI6IjBmYWZjYzllLTdjNDMtNGJkMS1iYzVmLWRkYjkwNjNjODExNCIsImF1ZCI6IjVlMDE0NTg2LTExYWYtNDhmNC05NGU3LTdhZDE1Yjk3ZmFlNyIsInN1YiI6ImE0YzA5ZWVlLThjZTgtNGNkYy1iNzFjLTdjNDFhOTA0YTEyNCIsImV4cCI6MTc1MzQ2NjMzMH0.vIu14Ic8RraiWkksHZas0LqWIib4ZIUdvySSS5dtsFrnHajBdZvQm3pC6ocG4p3CxHufhTISgE4_NG9nQRWCrQ\"\n}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/tokens/introspect',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': '1fd8543f-0fc6-4f80-9b6e-09f9eecbbdf5',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      token: 'eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJwYXkrSldUIa9.eyJlbnYiOiJwcm9kdWN0aW9uIiwiYnRnIjoiUGxheWdyb3VuZC02anlqbzNrejZoNiIsInNzaSI6IjIyM2JjM2ViLTliY2ItNGU5Yi1hZmQ2LWYyNmVlMGJkMzg5NCIsInZhbHVlIjoiNTAwMCIsImFtb3VudCI6IjAuMDA1Iiwic3BzIjoiUEFZX1BFUl9VU0UiLCJzcHIiOiIwLjAwMDAwMSIsIm1uciI6NTAwMCwiY3VyIjoiVVNEIiwiaWF0IjoxNzUzNDY2MDMzLCJpc3MiOiJodHRwczovL2FwcC5za3lmaXJlLnh5eiIsImp0aSI6IjBmYWZjYzllLTdjNDMtNGJkMS1iYzVmLWRkYjkwNjNjODExNCIsImF1ZCI6IjVlMDE0NTg2LTExYWYtNDhmNC05NGU3LTdhZDE1Yjk3ZmFlNyIsInN1YiI6ImE0YzA5ZWVlLThjZTgtNGNkYy1iNzFjLTdjNDFhOTA0YTEyNCIsImV4cCI6MTc1MzQ2NjMzMH0.vIu14Ic8RraiWkksHZas0LqWIib4ZIUdvySSS5dtsFrnHajBdZvQm3pC6ocG4p3CxHufhTISgE4_NG9nQRWCrQ'\n    })\n  }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': '1fd8543f-0fc6-4f80-9b6e-09f9eecbbdf5',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\n  \"token\": \"eyJhbGciOiJFUzI1NiIsImtpZCI6IjAiLCJ0eXAiOiJwYXkrSldUIa9.eyJlbnYiOiJwcm9kdWN0aW9uIiwiYnRnIjoiUGxheWdyb3VuZC02anlqbzNrejZoNiIsInNzaSI6IjIyM2JjM2ViLTliY2ItNGU5Yi1hZmQ2LWYyNmVlMGJkMzg5NCIsInZhbHVlIjoiNTAwMCIsImFtb3VudCI6IjAuMDA1Iiwic3BzIjoiUEFZX1BFUl9VU0UiLCJzcHIiOiIwLjAwMDAwMSIsIm1uciI6NTAwMCwiY3VyIjoiVVNEIiwiaWF0IjoxNzUzNDY2MDMzLCJpc3MiOiJodHRwczovL2FwcC5za3lmaXJlLnh5eiIsImp0aSI6IjBmYWZjYzllLTdjNDMtNGJkMS1iYzVmLWRkYjkwNjNjODExNCIsImF1ZCI6IjVlMDE0NTg2LTExYWYtNDhmNC05NGU3LTdhZDE1Yjk3ZmFlNyIsInN1YiI6ImE0YzA5ZWVlLThjZTgtNGNkYy1iNzFjLTdjNDFhOTA0YTEyNCIsImV4cCI6MTc1MzQ2NjMzMH0.vIu14Ic8RraiWkksHZas0LqWIib4ZIUdvySSS5dtsFrnHajBdZvQm3pC6ocG4p3CxHufhTISgE4_NG9nQRWCrQ\"\n})\nconn.request(\"POST\", \"/api/v1/tokens/introspect\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Tokens
+  /api/v1/tokens/{tokenId}/charges:
+    get:
+      summary: Get Token Charges
+      description: Get the charges on a `pay` or `kya-pay` token as a buyer or seller agent.
+      operationId: get-token-charges
+      parameters:
+      - in: path
+        name: tokenId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the `pay` or `kya-pay` token. This is the value of the `jti` claim in the token payload. e.g. `"82e7dded-ca08-445e-ac01-332b61bb49ce"`
+      - in: query
+        name: size
+        schema:
+          type: integer
+        description: Maximum number of charges to return per page. e.g. `50`
+      - in: query
+        name: pageCursor
+        schema:
+          type: string
+        description: Cursor for fetching the next page of results, from a previous response's `nextPageCursor`.
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    data:
+                    - tokenId: 1a587bc3-7a37-421b-99d7-27a180ceaee5
+                      chargeId: 0b288801-517a-490f-bff5-dfcee6669cf7
+                      claimId: 1a587bc3-7a37-421b-99d7-27a180ceaee5
+                      value: '0.015'
+                      chargedAt: '2026-05-19T17:33:19.000Z'
+                      settledAt: '2026-05-20T12:29:07.000Z'
+                      network: coinbase_mainnet
+                      tokenType: pay
+                      audience: a0102e21-c16e-4b1f-86cb-d2c237e18860
+                      subject: 52ac2062-b7e1-4e59-876d-33c9443822d0
+                      sellerServiceId: fbd49bd0-99f3-42f0-bb5b-7e689a49ec72
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tokenId:
+                          type: string
+                          description: The identifier for the payment token associated with this charge. Matches the path parameter `tokenId`.
+                        chargeId:
+                          type: string
+                          description: The unique identifier for this charge.
+                        claimId:
+                          type: string
+                          description: The identifier for the payment claim associated with this charge. Often matches the `tokenId`, except special cases.
+                        value:
+                          type: string
+                          description: The monetary amount charged, in USD.
+                        chargedAt:
+                          type: string
+                          description: The ISO timestamp when the charge was created.
+                          format: date-time
+                        settledAt:
+                          type: string
+                          description: The ISO timestamp when the charge was settled, or `null` if not settled yet.
+                          format: date-time
+                        network:
+                          type: string
+                          description: The payment network used for the charge, e.g. `coinbase_mainnet`.
+                        tokenType:
+                          type: string
+                          description: One of `pay` or `kya-pay`.
+                        audience:
+                          type: string
+                          description: The identifier of the seller agent that this token was created for.
+                        subject:
+                          type: string
+                          description: The identifier of the buyer that this token was created by.
+                        sellerServiceId:
+                          type: string
+                          description: The identifier of the seller service that this token was created for.
+                      required:
+                      - tokenId
+                      - chargeId
+                      - claimId
+                      - value
+                      - network
+                      - chargedAt
+                  nextPageCursor:
+                    type: string
+                    description: Cursor-based pagination. Non-empty if there are more results to fetch; pass it as the `pageCursor` query parameter to get the next page.
+                required:
+                - data
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: Not Found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      tokenId:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      tokenId:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/tokens/82e7dded-ca08-445e-ac01-332b61bb49ce/charges' \\\n  -H 'skyfire-api-key: ec6aeac1-3e76-4399-8569-8ce4fd8abdc4'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/tokens/82e7dded-ca08-445e-ac01-332b61bb49ce/charges',\n  { headers: { 'skyfire-api-key': 'ec6aeac1-3e76-4399-8569-8ce4fd8abdc4' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec6aeac1-3e76-4399-8569-8ce4fd8abdc4''}
+
+            conn.request("GET", "/api/v1/tokens/82e7dded-ca08-445e-ac01-332b61bb49ce/charges", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Tokens
+components:
+  securitySchemes:
+    sec0:
+      type: apiKey
+      name: skyfire-api-key
+      in: header
+x-readme-fauxas: true
+x-provenance:
+  method: searched
+  source: https://docs.skyfire.xyz/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.skyfire.xyz/reference/activate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/activate-agents-service.md
+  - https://docs.skyfire.xyz/reference/charge-token.md
+  - https://docs.skyfire.xyz/reference/create-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/create-agents-service.md
+  - https://docs.skyfire.xyz/reference/create-organization-user-session-token.md
+  - https://docs.skyfire.xyz/reference/create-organization-user.md
+  - https://docs.skyfire.xyz/reference/create-seller-agent.md
+  - https://docs.skyfire.xyz/reference/create-token.md
+  - https://docs.skyfire.xyz/reference/deactivate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/deactivate-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agent-api-keys.md
+  - https://docs.skyfire.xyz/reference/get-agents-seller-services-all.md
+  - https://docs.skyfire.xyz/reference/get-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/get-agents-wallet-balance.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-email.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-id.md
+  - https://docs.skyfire.xyz/reference/get-organization-users.md
+  - https://docs.skyfire.xyz/reference/get-token-charges.md
+  - https://docs.skyfire.xyz/reference/introspect-token.md
+  - https://docs.skyfire.xyz/reference/set-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-active.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-inactive.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-personal-data.md
+  - https://docs.skyfire.xyz/reference/update-agents-service.md
+  merge:
+    pages: 26
+    deduped: 29
+    conflicts_kept_first: 0

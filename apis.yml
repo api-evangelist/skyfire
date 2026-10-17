@@ -165,8 +165,10 @@ common:
 
 apis:
 - name: Skyfire API
-  description: REST API for AI-agent identity and payments. Buyer agents create kya, pay, and kya-pay tokens; seller agents introspect and charge
-    tokens and manage seller services; enterprises manage users. Authenticated with a single skyfire-api-key header (role-specific keys).
+  description: >-
+    REST API for AI-agent identity and payments. Buyer agents create kya, pay, and kya-pay tokens; seller
+    agents introspect and charge tokens and manage seller services; enterprises manage users. Authenticated
+    with a single skyfire-api-key header (role-specific keys).
   humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
   baseURL: https://api.skyfire.xyz
   tags:
@@ -187,33 +189,86 @@ apis:
   - type: MCPServer
     url: mcp/skyfire-mcp.yml
   aid: skyfire:skyfire-api
-- aid: skyfire:skyfire-agent-and-token-apis
-  name: Skyfire Agent And Token Apis Openapi.Yml API
-  description: The Agent And Token Apis Openapi.Yml API from Skyfire — 21 operation(s) for agent and token apis openapi.yml.
+- aid: skyfire:skyfire-agents-api
+  name: Skyfire Agents API
+  description: The Agents API from Skyfire — 6 operation(s) for agents.
   humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
   baseURL: https://api.skyfire.xyz
   tags:
-  - Agent And Token Apis Openapi.Yml
+  - Agents
   properties:
   - type: OpenAPI
-    url: openapi/skyfire-agent-and-token-apis-openapi.yml
+    url: openapi/skyfire-agents-api-openapi.yml
   - type: JSONSchema
     url: json-schema/skyfire-seller-service-schema.json
   - type: JSONSchema
     url: json-schema/skyfire-organization-user-schema.json
-- aid: skyfire:skyfire-service-directory-apis
-  name: Skyfire Service Directory Apis Openapi.Yml API
-  description: The Service Directory Apis Openapi.Yml API from Skyfire — 5 operation(s) for service directory apis openapi.yml.
+  - type: JSONSchema
+    url: json-schema/skyfire-directory-service-schema.json
+- aid: skyfire:skyfire-auth-api
+  name: Skyfire Auth API
+  description: The Auth API from Skyfire — 1 operation(s) for auth.
   humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
   baseURL: https://api.skyfire.xyz
   tags:
-  - Service Directory Apis Openapi.Yml
+  - Auth
   properties:
   - type: OpenAPI
-    url: openapi/skyfire-service-directory-apis-openapi.yml
+    url: openapi/skyfire-auth-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/skyfire-seller-service-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-organization-user-schema.json
   - type: JSONSchema
     url: json-schema/skyfire-directory-service-schema.json
-
+- aid: skyfire:skyfire-directory-api
+  name: Skyfire Directory API
+  description: The Directory API from Skyfire — 5 operation(s) for directory.
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Directory
+  properties:
+  - type: OpenAPI
+    url: openapi/skyfire-directory-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/skyfire-seller-service-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-organization-user-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-directory-service-schema.json
+- aid: skyfire:skyfire-organizations-api
+  name: Skyfire Organizations API
+  description: The Organizations API from Skyfire — 10 operation(s) for organizations.
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Organizations
+  properties:
+  - type: OpenAPI
+    url: openapi/skyfire-organizations-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/skyfire-seller-service-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-organization-user-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-directory-service-schema.json
+- aid: skyfire:skyfire-tokens-api
+  name: Skyfire Tokens API
+  description: The Tokens API from Skyfire — 4 operation(s) for tokens.
+  humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
+  baseURL: https://api.skyfire.xyz
+  tags:
+  - Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/skyfire-tokens-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/skyfire-seller-service-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-organization-user-schema.json
+  - type: JSONSchema
+    url: json-schema/skyfire-directory-service-schema.json
 x-enrichment:
   date: '2026-07-21'
   status: enriched

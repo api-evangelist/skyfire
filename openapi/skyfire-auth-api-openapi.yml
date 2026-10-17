@@ -1,0 +1,183 @@
+openapi: 3.2.0
+info:
+  title: skyfire-agent-and-token-apis Auth API
+  version: '1.0'
+servers:
+- url: https://api.skyfire.xyz
+security:
+- sec0: []
+tags:
+- name: Auth
+paths:
+  /api/v1/auth/skyfire-session-token:
+    post:
+      description: As an Organization Admin, create a short-lived session token for a user in your organization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - userId
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+                  description: Unique identifier of the organization user the session is created for. Must be a user in your own organization. e.g. `"906fc259-ef0a-4736-bdcd-c1d5a78db483"`
+            examples:
+              Create session token:
+                summary: Create session token
+                value:
+                  userId: 906fc259-ef0a-4736-bdcd-c1d5a78db483
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: string
+                description: The session token as a bare JSON string, not an object. Expires 5 minutes after creation.
+              examples:
+                Ok:
+                  summary: Ok
+                  value: rADl8Cfi5AkaZXXlkMUuWdBKsvn3_uOMPN1tbladyZSz
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Organization has no representative:
+                  summary: Organization has no representative
+                  value:
+                    code: BAD_REQUEST
+                    message: the user's organization has no representative
+                User has no login identity:
+                  summary: User has no login identity
+                  value:
+                    code: BAD_REQUEST
+                    message: User must have a valid stytch user id
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unauthorized:
+                  summary: Unauthorized
+                  value:
+                    code: NOT_AUTHORIZED
+                    message: Invalid Organization User API Key
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: User not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      userId:
+                        message: Must be a valid UUID
+      operationId: create-organization-user-session-token
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/auth/skyfire-session-token' \\\n  -H 'skyfire-api-key: ec0bf984-34f9-4e1e-a06e-984f3dfb089e' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"userId\":\"906fc259-ef0a-4736-bdcd-c1d5a78db483\"}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch('https://api.skyfire.xyz/api/v1/auth/skyfire-session-token', {\n  method: 'POST',\n  headers: {\n    'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e',\n    'Content-Type': 'application/json'\n  },\n  body: JSON.stringify({ userId: '906fc259-ef0a-4736-bdcd-c1d5a78db483' })\n});\nconst sessionToken = await res.json(); // a JSON string, expires in 5 minutes"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': 'ec0bf984-34f9-4e1e-a06e-984f3dfb089e',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\"userId\": \"906fc259-ef0a-4736-bdcd-c1d5a78db483\"})\nconn.request(\"POST\", \"/api/v1/auth/skyfire-session-token\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      summary: Create Organization User Session Token
+      tags:
+      - Auth
+components:
+  securitySchemes:
+    sec0:
+      type: apiKey
+      name: skyfire-api-key
+      in: header
+x-readme-fauxas: true
+x-provenance:
+  method: searched
+  source: https://docs.skyfire.xyz/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.skyfire.xyz/reference/activate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/activate-agents-service.md
+  - https://docs.skyfire.xyz/reference/charge-token.md
+  - https://docs.skyfire.xyz/reference/create-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/create-agents-service.md
+  - https://docs.skyfire.xyz/reference/create-organization-user-session-token.md
+  - https://docs.skyfire.xyz/reference/create-organization-user.md
+  - https://docs.skyfire.xyz/reference/create-seller-agent.md
+  - https://docs.skyfire.xyz/reference/create-token.md
+  - https://docs.skyfire.xyz/reference/deactivate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/deactivate-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agent-api-keys.md
+  - https://docs.skyfire.xyz/reference/get-agents-seller-services-all.md
+  - https://docs.skyfire.xyz/reference/get-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/get-agents-wallet-balance.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-email.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-id.md
+  - https://docs.skyfire.xyz/reference/get-organization-users.md
+  - https://docs.skyfire.xyz/reference/get-token-charges.md
+  - https://docs.skyfire.xyz/reference/introspect-token.md
+  - https://docs.skyfire.xyz/reference/set-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-active.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-inactive.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-personal-data.md
+  - https://docs.skyfire.xyz/reference/update-agents-service.md
+  merge:
+    pages: 26
+    deduped: 29
+    conflicts_kept_first: 0

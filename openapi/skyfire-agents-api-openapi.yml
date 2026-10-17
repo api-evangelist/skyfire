@@ -1,0 +1,1169 @@
+openapi: 3.2.0
+info:
+  title: skyfire-agent-and-token-apis Agents API
+  version: '1.0'
+servers:
+- url: https://api.skyfire.xyz
+security:
+- sec0: []
+tags:
+- name: Agents
+paths:
+  /api/v1/agents/balance:
+    get:
+      summary: Get Agent's Wallet Balance
+      description: Get the wallet balance of the agent.
+      operationId: get-agents-wallet-balance
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    available: '0.316285'
+                    heldAmount: '0'
+                    pendingCharges: '0'
+                    pendingDeposits: '0.013001'
+              schema:
+                type: object
+                properties:
+                  available:
+                    type: string
+                    description: Funds available in the agent's wallet, as a decimal string.
+                  heldAmount:
+                    type: string
+                    description: Funds currently held, as a decimal string.
+                  pendingCharges:
+                    type: string
+                    description: Charges that are still pending, as a decimal string.
+                  pendingDeposits:
+                    type: string
+                    description: Deposits that are still pending, as a decimal string.
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/agents/balance' \\\n  -H 'skyfire-api-key: 1fd8543f-0fc6-4f80-9b6e-08d9eecbbdf0'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/balance',\n  { headers: { 'skyfire-api-key': '1fd8543f-0fc6-4f80-9b6e-08d9eecbbdf0' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''1fd8543f-0fc6-4f80-9b6e-08d9eecbbdf0''}
+
+            conn.request("GET", "/api/v1/agents/balance", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+  /api/v1/agents/seller-services:
+    get:
+      summary: Get Agent's Services - All
+      description: Get all of the seller agent's services.
+      operationId: get-agents-seller-services-all
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    data:
+                    - id: c8ed8e2c-c32c-4f6d-8b64-144a7b11e8ff
+                      name: Enterprise Analytics Platform
+                      description: Full-featured enterprise analytics platform with advanced AI-powered insights, custom dashboards, and white-label options.
+                      tags:
+                      - analytics
+                      - enterprise
+                      - ai
+                      - white-label
+                      type: API
+                      price: '0.2'
+                      priceModel: PAY_PER_USE
+                      minimumTokenAmount: '0.21'
+                      humanIdentityRequirement:
+                        identityLevels: []
+                        organization: []
+                        individual: []
+                      termsOfService:
+                        url: https://premium-analytics.com/enterprise-terms
+                        required: true
+                      seller:
+                        id: a8e49eea-ac7b-41f2-aa74-84fb86ad40bc
+                        name: Seller 1
+                      openApiSpecUrl: https://api.premium-analytics.com/v2/openapi.json
+                      acceptedTokens:
+                      - kya
+                      - pay
+                      - kya-pay
+                      createdAt: '2025-07-18T02:51:54.265Z'
+                      updatedAt: '2025-07-18T02:54:19.767Z'
+                      active: false
+                      approved: false
+                    - id: deeafae8-b98f-40a2-ad62-4fbe22334d89
+                      name: Enhanced Weather Data API Service
+                      description: Updated weather service with additional features including severe weather alerts and air quality data.
+                      tags:
+                      - weather
+                      - api
+                      - data
+                      - forecasting
+                      - alerts
+                      type: API
+                      price: '0.025'
+                      priceModel: PAY_PER_USE
+                      minimumTokenAmount: '0.025'
+                      humanIdentityRequirement:
+                        identityLevels:
+                        - INDIVIDUAL_LEVEL1
+                        organization: []
+                        individual:
+                        - birthdate
+                      termsOfService:
+                        url: https://weatherservice.com/updated-terms
+                        required: true
+                      seller:
+                        id: a8e49eea-ac7b-41f2-aa74-84fb86ad40bc
+                        name: Seller 1
+                      openApiSpecUrl: https://api.weatherservice.com/v1/openapi.json
+                      createdAt: '2025-07-18T02:11:16.241Z'
+                      updatedAt: '2025-07-18T02:25:52.755Z'
+                      active: false
+                      approved: false
+                    - id: 127b2a75-4699-40a2-b1bc-a84f4d865dd1
+                      name: Test Service
+                      description: Test Service
+                      tags: []
+                      type: API
+                      price: '0.000001'
+                      priceModel: PAY_PER_USE
+                      minimumTokenAmount: '0.000001'
+                      humanIdentityRequirement:
+                        identityLevels: []
+                        organization: []
+                        individual: []
+                      seller:
+                        id: a8e49eea-ac7b-41f2-aa74-84fb86ad40bc
+                        name: Seller 1
+                      openApiSpecUrl: apr.example.com
+                      acceptedTokens:
+                      - kya
+                      - pay
+                      - kya-pay
+                      createdAt: '2025-06-28T16:27:21.081Z'
+                      updatedAt: '2025-06-28T16:27:21.081Z'
+                      active: false
+                      approved: false
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description: The seller agent's services.
+                    items:
+                      $ref: '#/components/schemas/SellerService'
+                required:
+                - data
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/agents/seller-services' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bf5-b8c44bf4a155'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/seller-services',\n  { headers: { 'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''72fa67b7-961e-4535-8bf5-b8c44bf4a155''}
+
+            conn.request("GET", "/api/v1/agents/seller-services", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+    post:
+      summary: Create Agent's Service
+      description: Create a seller service that belongs to an agent.
+      operationId: create-agents-service-1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - description
+              - tags
+              - type
+              - price
+              - priceModel
+              - minimumTokenAmount
+              - humanIdentityRequirement
+              properties:
+                name:
+                  type: string
+                  description: The name of the service.
+                description:
+                  type: string
+                  description: The description of the service.
+                tags:
+                  type: array
+                  description: The tags for this service. An empty array is fine.
+                  items:
+                    type: string
+                type:
+                  type: string
+                  description: 'The type of the service. This is one of: "API", "WEB_PAGE", "MCP_SERVER_REMOTE", "MCP_SERVER_LOCAL", or "FETCH_AGENT"'
+                  enum:
+                  - API
+                  - WEB_PAGE
+                  - MCP_SERVER_REMOTE
+                  - MCP_SERVER_LOCAL
+                  - FETCH_AGENT
+                price:
+                  type: string
+                  description: Price of the service in USD.
+                priceModel:
+                  type: string
+                  description: The pricing model of the service. This is one of "PAY_PER_USE", "SUBSCRIPTION", "PAY_PER_MB", or "CUSTOM".
+                  enum:
+                  - PAY_PER_USE
+                  - SUBSCRIPTION
+                  - PAY_PER_MB
+                  - CUSTOM
+                minimumTokenAmount:
+                  type: string
+                  description: Buyers must create tokens of at least this amount in USD.
+                mcpServerUrl:
+                  type: string
+                  description: The URL of the MCP Server for this service. This is required if the "type" is "MCP_SERVER_REMOTE" or "MCP_SERVER_LOCAL".
+                openApiSpecUrl:
+                  type: string
+                  description: The URL of the OpenAPI specification for this service. This is required if the "type" is "API".
+                websiteUrl:
+                  type: string
+                  description: The URL of the website. This is required if the "type" is "WEB_PAGE".
+                fetchAgentProfileUrl:
+                  type: string
+                  description: The URL of the Fetch.ai agent. This is required if the "type" is "FETCH_AGENT".
+                humanIdentityRequirement:
+                  type: object
+                  description: The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.
+                  required:
+                  - individual
+                  - organization
+                  properties:
+                    individual:
+                      type: array
+                      description: List of identity fields required from verified individuals. An empty array indicates no verification required.
+                      items:
+                        type: string
+                    organization:
+                      type: array
+                      description: List of identity fields required from verified organizations. An empty array indicates no verification required.
+                      items:
+                        type: string
+                termsOfService:
+                  type: object
+                  description: The details of the terms of service if they exist.
+                  properties:
+                    url:
+                      type: string
+                      description: The URL where the terms of service are available to review.
+                    required:
+                      type: boolean
+                      description: '''true'' if acceptance of the terms of service is required.'
+                acceptedTokens:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - kya
+                    - pay
+                    - kya-pay
+                  description: Must be one or more of "kya", "pay" and "kya-pay". Must not be an empty array. If this field is omitted then all token types will be accepted.
+                maxTokenTTLSeconds:
+                  type: number
+                  description: Maximum token TTL in seconds between 10s and 24hr.
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    id: f17b2843-b9b4-46be-9088-4cdbeec5a060
+                    name: Weather Data API Service
+                    description: Provides real-time weather data and forecasts for global locations. Includes current conditions, 7-day forecasts, and historical weather data.
+                    tags:
+                    - weather
+                    - api
+                    - data
+                    - forecasting
+                    type: API
+                    price: '0.02'
+                    priceModel: PAY_PER_USE
+                    minimumTokenAmount: '0.02'
+                    humanIdentityRequirement:
+                      identityLevels:
+                      - INDIVIDUAL_LEVEL1
+                      organization: []
+                      individual:
+                      - birthdate
+                    termsOfService:
+                      url: https://weatherservice.com/terms
+                      required: true
+                    seller:
+                      id: a8e49eea-ac7b-41f2-aa74-84fb86ad40bc
+                      name: Seller 1
+                      identityLevel: INDIVIDUAL_LEVEL2
+                    openApiSpecUrl: https://api.weatherservice.com/v1/openapi.json
+                    acceptedTokens:
+                    - pay
+                    - kya-pay
+                    createdAt: '2025-10-20T00:41:24.256Z'
+                    updatedAt: '2025-10-20T00:41:24.256Z'
+                    active: true
+                    approved: true
+              schema:
+                $ref: '#/components/schemas/SellerService'
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      data.type:
+                        message: '''type'' is required'
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      data.type:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: '''type'' is required'
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/agents/seller-services' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bab-b8c44bf4e155' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"name\": \"Weather Data API Service\",\n  \"description\": \"Provides real-time weather data and forecasts for global locations. Includes current conditions, 7-day forecasts, and historical weather data.\",\n  \"tags\": [\n    \"weather\",\n    \"api\",\n    \"data\",\n    \"forecasting\"\n  ],\n  \"type\": \"API\",\n  \"price\": \"0.02\",\n  \"priceModel\": \"PAY_PER_USE\",\n  \"minimumTokenAmount\": \"0.02\",\n  \"openApiSpecUrl\": \"https://api.weatherservice.com/v1/openapi.json\",\n  \"humanIdentityRequirement\": {\n    \"individual\": [\n      \"birthdate\"\n    ],\n    \"organization\": []\n  },\n  \"termsOfService\": {\n    \"url\": \"https://weatherservice.com/terms\",\n    \"required\": true\n  },\n  \"acceptedTokens\": [\n    \"pay\",\n    \"kya-pay\"\n  ]\n}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/seller-services',\n  {\n    method: 'POST',\n    headers: {\n      'skyfire-api-key': '72fa67b7-961e-4535-8bab-b8c44bf4e155',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      name: 'Weather Data API Service',\n      description: 'Provides real-time weather data and forecasts for global locations. Includes current conditions, 7-day forecasts, and historical weather data.',\n      tags: ['weather', 'api', 'data', 'forecasting'],\n      type: 'API',\n      price: '0.02',\n      priceModel: 'PAY_PER_USE',\n      minimumTokenAmount: '0.02',\n      openApiSpecUrl: 'https://api.weatherservice.com/v1/openapi.json',\n      humanIdentityRequirement: { individual: ['birthdate'], organization: [] },\n      termsOfService: { url: 'https://weatherservice.com/terms', required: true },\n      acceptedTokens: ['pay', 'kya-pay']\n    })\n  }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': '72fa67b7-961e-4535-8bab-b8c44bf4e155',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\n  \"name\": \"Weather Data API Service\",\n  \"description\": \"Provides real-time weather data and forecasts for global locations. Includes current conditions, 7-day forecasts, and historical weather data.\",\n  \"tags\": [\"weather\", \"api\", \"data\", \"forecasting\"],\n  \"type\": \"API\",\n  \"price\": \"0.02\",\n  \"priceModel\": \"PAY_PER_USE\",\n  \"minimumTokenAmount\": \"0.02\",\n  \"openApiSpecUrl\": \"https://api.weatherservice.com/v1/openapi.json\",\n  \"humanIdentityRequirement\": {\"individual\": [\"birthdate\"], \"organization\": []},\n  \"termsOfService\": {\n    \"url\": \"https://weatherservice.com/terms\",\n    \"required\": True\n  },\n  \"acceptedTokens\": [\"pay\", \"kya-pay\"]\n})\nconn.request(\"POST\", \"/api/v1/agents/seller-services\", payload, headers)\nres = conn.getresponse()\nprint(res.read().decode(\"utf-8\"))"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+  /api/v1/agents/seller-services/{sellerServiceId}:
+    get:
+      summary: Get Agent's Service
+      description: Get a particular service belonging to the seller agent.
+      operationId: get-agents-service
+      parameters:
+      - in: path
+        name: sellerServiceId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the seller service. e.g. `"c8ed8e2c-c32c-4f6d-8b64-144a7b11e8ff"`
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                    id: c8ed8e2c-c32c-4f6d-8b64-144a7b11e8ff
+                    name: Enterprise Analytics Platform
+                    description: Full-featured enterprise analytics platform with advanced AI-powered insights, custom dashboards, and white-label options.
+                    tags:
+                    - analytics
+                    - enterprise
+                    - ai
+                    - white-label
+                    type: API
+                    price: '0.2'
+                    priceModel: PAY_PER_USE
+                    minimumTokenAmount: '0.21'
+                    humanIdentityRequirement:
+                      identityLevels: []
+                      organization: []
+                      individual: []
+                    termsOfService:
+                      url: https://premium-analytics.com/enterprise-terms
+                      required: true
+                    seller:
+                      id: a8e49eea-ac7b-41f2-aa74-84fb86ad40bc
+                      name: Seller 1
+                      identityLevel: INDIVIDUAL_LEVEL2
+                    openApiSpecUrl: https://api.premium-analytics.com/v2/openapi.json
+                    createdAt: '2025-07-18T02:51:54.265Z'
+                    updatedAt: '2025-07-18T02:54:19.767Z'
+                    active: false
+                    approved: false
+              schema:
+                $ref: '#/components/schemas/SellerService'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: Seller service not found
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  message:
+                    type: string
+                    example: Seller service not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      id:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      id:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/agents/seller-services/c8ed8e2c-c32c-4f6d-8b64-144a7b11e8ff' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bf5-b8c44bf4a155'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/seller-services/c8ed8e2c-c32c-4f6d-8b64-144a7b11e8ff',\n  { headers: { 'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''72fa67b7-961e-4535-8bf5-b8c44bf4a155''}
+
+            conn.request("GET", "/api/v1/agents/seller-services/c8ed8e2c-c32c-4f6d-8b64-144a7b11e8ff", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+    patch:
+      summary: Update Agent's Service
+      description: Update a seller service that belongs to the agent.
+      operationId: update-agents-service
+      parameters:
+      - in: path
+        name: sellerServiceId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the seller service to update. e.g. `"deeafae8-b98f-40a2-ad62-4fbe22334d89"`
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: New name of the service.
+                description:
+                  type: string
+                  description: New description of the service.
+                tags:
+                  type: array
+                  description: New tags for the service.
+                  items:
+                    type: string
+                minimumTokenAmount:
+                  type: string
+                  description: New minimum amount (in USD) that buyers must set on their tokens.
+                price:
+                  type: string
+                  description: New price of the service in USD.
+                termsOfService:
+                  type: object
+                  description: New terms of service for this service.
+                  properties:
+                    url:
+                      type: string
+                      description: The URL where the terms of service are available to review.
+                    required:
+                      type: boolean
+                      description: '''true'' if acceptance of the terms of service is required.'
+                acceptedTokens:
+                  type: array
+                  description: List of KYAPay token types that this Seller Service accepts. Must be one or more of 'kya', 'pay' and 'kya-pay'.
+                  items:
+                    type: string
+                    enum:
+                    - kya
+                    - pay
+                    - kya-pay
+      responses:
+        '204':
+          description: No Content. The service is updated.
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value: "<!DOCTYPE html>\n<html lang=\"en\">\n\n<head>\n    <meta charset=\"utf-8\">\n    <title>Error</title>\n</head>\n\n<body>\n    <pre>Bad Request</pre>\n</body>\n\n</html>"
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      id:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      id:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X PATCH 'https://api.skyfire.xyz/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bf5-b8c44bf4a155' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n  \"name\": \"Enhanced Weather Data API Service\",\n  \"description\": \"Updated weather service with additional features including severe weather alerts and air quality data.\",\n  \"tags\": [\n    \"weather\",\n    \"api\",\n    \"data\",\n    \"forecasting\",\n    \"alerts\"\n  ],\n  \"minimumTokenAmount\": \"0.025\",\n  \"price\": \"0.025\",\n  \"termsOfService\": {\n    \"url\": \"https://weatherservice.com/updated-terms\",\n    \"required\": true\n  },\n  \"acceptedTokens\": [\n    \"kya\"\n  ]\n}'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89',\n  {\n    method: 'PATCH',\n    headers: {\n      'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify({\n      name: 'Enhanced Weather Data API Service',\n      description: 'Updated weather service with additional features including severe weather alerts and air quality data.',\n      tags: ['weather', 'api', 'data', 'forecasting', 'alerts'],\n      minimumTokenAmount: '0.025',\n      price: '0.025',\n      termsOfService: {\n        url: 'https://weatherservice.com/updated-terms',\n        required: true\n      },\n      acceptedTokens: ['kya']\n    })\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps({\n  \"name\": \"Enhanced Weather Data API Service\",\n  \"description\": \"Updated weather service with additional features including severe weather alerts and air quality data.\",\n  \"tags\": [\"weather\", \"api\", \"data\", \"forecasting\", \"alerts\"],\n  \"minimumTokenAmount\": \"0.025\",\n  \"price\": \"0.025\",\n  \"termsOfService\": {\n    \"url\": \"https://weatherservice.com/updated-terms\",\n    \"required\": True\n  },\n  \"acceptedTokens\": [\"kya\"]\n})\nconn.request(\"PATCH\", \"/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89\", payload, headers)\nres = conn.getresponse()\nprint(res.status)  # 204"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+  /api/v1/agents/seller-services/{sellerServiceId}/activate:
+    post:
+      summary: Activate Agent's Service
+      description: Activate a seller service belonging to an agent. Only approved seller services can be activated.
+      operationId: create-agents-service
+      parameters:
+      - in: path
+        name: sellerServiceId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the seller service to activate. e.g. `"deeafae8-b98f-40a2-ad62-4fbe22334d89"`
+      responses:
+        '204':
+          description: No Content. The service is active.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: Only approved seller services can be activated. This service is not approved, please contact support.
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: BAD_REQUEST
+                  message:
+                    type: string
+                    example: Only approved seller services can be activated. This service is not approved, please contact support.
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      id:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      id:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89/activate' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bf5-b8c44bf4a155'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89/activate',\n  {\n    method: 'POST',\n    headers: { 'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155' }\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''72fa67b7-961e-4535-8bf5-b8c44bf4a155''}
+
+            conn.request("POST", "/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89/activate", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.status)  # 204'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+  /api/v1/agents/seller-services/{sellerServiceId}/deactivate:
+    post:
+      summary: Deactivate Agent's Service
+      description: Deactivate a seller service belonging to an agent.
+      operationId: deactivate-agents-service
+      parameters:
+      - in: path
+        name: sellerServiceId
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique identifier of the seller service to deactivate. e.g. `"deeafae8-b98f-40a2-ad62-4fbe22334d89"`
+      responses:
+        '204':
+          description: No Content. The service is deactivated.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: Seller service not found
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: NOT_FOUND
+                  message:
+                    type: string
+                    example: Seller service not found
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      id:
+                        message: Must be a valid UUID
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                    example: VALIDATION_ERROR
+                  message:
+                    type: string
+                    example: Validation Error
+                  details:
+                    type: object
+                    properties:
+                      id:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Must be a valid UUID
+      x-readme:
+        code-samples:
+        - code: "curl -i -X POST 'https://api.skyfire.xyz/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89/deactivate' \\\n  -H 'skyfire-api-key: 72fa67b7-961e-4535-8bf5-b8c44bf4a155'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89/deactivate',\n  {\n    method: 'POST',\n    headers: { 'skyfire-api-key': '72fa67b7-961e-4535-8bf5-b8c44bf4a155' }\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''72fa67b7-961e-4535-8bf5-b8c44bf4a155''}
+
+            conn.request("POST", "/api/v1/agents/seller-services/deeafae8-b98f-40a2-ad62-4fbe22334d89/deactivate", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.status)  # 204'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+  /api/v1/agents/source-ips:
+    get:
+      summary: Get Agent's Source IP Addresses
+      description: Get the source IP addresses configured for the agent.
+      operationId: get_apiv1agentsbalance-1
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: Source IP address
+                description: Source IP addresses configured for the agent.
+              examples:
+                Ok:
+                  summary: Ok
+                  value:
+                  - 2.2.2.2
+                  - 1.1.1.1
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Not Found:
+                  summary: Not Found
+                  value:
+                    code: NOT_FOUND
+                    message: Agent Source IP List does not exist
+      x-readme:
+        code-samples:
+        - code: "curl -i -X GET 'https://api.skyfire.xyz/api/v1/agents/source-ips' \\\n  -H 'skyfire-api-key: ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/source-ips',\n  { headers: { 'skyfire-api-key': 'ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4' } }\n);\nconsole.log(await res.json());"
+          language: node
+          name: ''
+        - code: 'import http.client
+
+
+            conn = http.client.HTTPSConnection("api.skyfire.xyz")
+
+            headers = {''skyfire-api-key'': ''ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4''}
+
+            conn.request("GET", "/api/v1/agents/source-ips", None, headers)
+
+            res = conn.getresponse()
+
+            print(res.read().decode("utf-8"))'
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+    put:
+      summary: Set Agent's Source IP Addresses
+      description: Set the source IP addresses for the agent.
+      operationId: get_apiv1agentssource-ips-1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              description: Source IP addresses to set for the agent. e.g. `["1.1.1.1", "2.2.2.2"]`
+              items:
+                type: string
+                description: Source IP address.
+            examples:
+              Two addresses:
+                summary: Two addresses
+                value:
+                - 1.1.1.1
+                - 2.2.2.2
+      responses:
+        '204':
+          description: No Content. The source IP addresses are set.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+              examples:
+                Bad Request:
+                  summary: Bad Request
+                  value:
+                    code: BAD_REQUEST
+                    message: Invalid input
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  details:
+                    type: object
+                    properties:
+                      body:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+              examples:
+                Unprocessable Entity:
+                  summary: Unprocessable Entity
+                  value:
+                    code: VALIDATION_ERROR
+                    message: Validation Error
+                    details:
+                      body:
+                        message: invalid array
+      x-readme:
+        code-samples:
+        - code: "curl -i -X PUT 'https://api.skyfire.xyz/api/v1/agents/source-ips' \\\n  -H 'skyfire-api-key: ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4' \\\n  -H 'Content-Type: application/json' \\\n  -d '[\"1.1.1.1\",\"2.2.2.2\"]'"
+          language: shell
+          name: cURL
+        - code: "const res = await fetch(\n  'https://api.skyfire.xyz/api/v1/agents/source-ips',\n  {\n    method: 'PUT',\n    headers: {\n      'skyfire-api-key': 'ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4',\n      'Content-Type': 'application/json'\n    },\n    body: JSON.stringify(['1.1.1.1', '2.2.2.2'])\n  }\n);\nconsole.log(res.status); // 204"
+          language: node
+          name: ''
+        - code: "import http.client\nimport json\n\nconn = http.client.HTTPSConnection(\"api.skyfire.xyz\")\nheaders = {\n  'skyfire-api-key': 'ec6aeac1-3e76-4399-85ab-8ce4fd85bdc4',\n  'Content-Type': 'application/json'\n}\npayload = json.dumps([\"1.1.1.1\", \"2.2.2.2\"])\nconn.request(\"PUT\", \"/api/v1/agents/source-ips\", payload, headers)\nres = conn.getresponse()\nprint(res.status)  # 204"
+          language: python
+          name: ''
+        samples-languages:
+        - shell
+        - node
+        - python
+      tags:
+      - Agents
+components:
+  schemas:
+    SellerService:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the seller service.
+        name:
+          type: string
+          description: The name of the service.
+        description:
+          type: string
+          description: The description of the service.
+        tags:
+          type: array
+          description: The tags for this service. Empty if none were set.
+          items:
+            type: string
+        type:
+          type: string
+          description: One of "API", "WEB_PAGE", "VERIFIED_DOMAIN", "MCP_SERVER_LOCAL", "MCP_SERVER_REMOTE", or "FETCH_AGENT"
+          enum:
+          - API
+          - WEB_PAGE
+          - VERIFIED_DOMAIN
+          - MCP_SERVER_LOCAL
+          - MCP_SERVER_REMOTE
+          - FETCH_AGENT
+        price:
+          type: string
+          description: 'USD as string. For priceModel: CUSTOM, use "0".'
+        priceModel:
+          type: string
+          description: One of "PAY_PER_USE", "SUBSCRIPTION", "PAY_PER_MB", or "CUSTOM"
+          enum:
+          - PAY_PER_USE
+          - SUBSCRIPTION
+          - PAY_PER_MB
+          - CUSTOM
+        minimumTokenAmount:
+          type: string
+          description: USD as string. For CUSTOM, use "0". Must be ≥ price after numeric conversion.
+        humanIdentityRequirement:
+          type: object
+          description: The identity verification requirements for individuals, organizations, or both. See https://docs.skyfire.xyz/reference/identity-fields for more info.
+          properties:
+            identityLevels:
+              type: array
+              description: Identity levels required from verified humans. e.g. `"INDIVIDUAL_LEVEL1"`.
+              items:
+                type: string
+            organization:
+              type: array
+              description: Values must be allowed identity field names.
+              items:
+                type: string
+            individual:
+              type: array
+              description: Values must be allowed identity field names.
+              items:
+                type: string
+        openApiSpecUrl:
+          type: string
+          description: Required when `type` is API.
+        websiteUrl:
+          type: string
+          description: Required when `type` is WEB_PAGE.
+        fetchAgentProfileUrl:
+          type: string
+          description: Required when `type` is FETCH_AGENT.
+        mcpServerUrl:
+          type: string
+          description: Required when `type` is MCP_SERVER_LOCAL or MCP_SERVER_REMOTE.
+        termsOfService:
+          type: object
+          description: The details of the terms of service if they exist.
+          properties:
+            url:
+              type: string
+              description: The URL where the terms of service are available to review.
+            required:
+              type: boolean
+              description: '`true` if acceptance of the terms of service is required.'
+        acceptedTokens:
+          type: array
+          description: Any of "kya", "pay", and/or "kya-pay". Must not be an empty array. If field is omitted, then all token types are accepted.
+          items:
+            type: string
+            enum:
+            - kya
+            - pay
+            - kya-pay
+        maxTokenTTLSeconds:
+          type: number
+          description: Maximum token TTL in seconds.
+        seller:
+          type: object
+          description: The seller that owns this service.
+          properties:
+            id:
+              type: string
+              description: Unique identifier of the seller.
+            name:
+              type: string
+              description: Name of the seller.
+            identityLevel:
+              type: string
+              description: Does not exist if the seller has not done verification.
+        createdAt:
+          type: string
+          description: When the service was created. e.g. `"2025-07-18T02:51:54.265Z"`.
+        updatedAt:
+          type: string
+          description: When the service was last updated. e.g. `"2025-07-18T02:54:19.767Z"`.
+        active:
+          type: boolean
+          description: Whether the service is active.
+        approved:
+          type: boolean
+          description: Whether the service has been approved. Only approved services can be activated.
+      required:
+      - id
+      - name
+      - description
+      - tags
+      - type
+      - price
+      - priceModel
+      - minimumTokenAmount
+      - humanIdentityRequirement
+      - seller
+      - createdAt
+      - updatedAt
+      - active
+      - approved
+  securitySchemes:
+    sec0:
+      type: apiKey
+      name: skyfire-api-key
+      in: header
+x-readme-fauxas: true
+x-provenance:
+  method: searched
+  source: https://docs.skyfire.xyz/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.skyfire.xyz/reference/activate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/activate-agents-service.md
+  - https://docs.skyfire.xyz/reference/charge-token.md
+  - https://docs.skyfire.xyz/reference/create-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/create-agents-service.md
+  - https://docs.skyfire.xyz/reference/create-organization-user-session-token.md
+  - https://docs.skyfire.xyz/reference/create-organization-user.md
+  - https://docs.skyfire.xyz/reference/create-seller-agent.md
+  - https://docs.skyfire.xyz/reference/create-token.md
+  - https://docs.skyfire.xyz/reference/deactivate-agent-api-key.md
+  - https://docs.skyfire.xyz/reference/deactivate-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agent-api-keys.md
+  - https://docs.skyfire.xyz/reference/get-agents-seller-services-all.md
+  - https://docs.skyfire.xyz/reference/get-agents-service.md
+  - https://docs.skyfire.xyz/reference/get-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/get-agents-wallet-balance.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-email.md
+  - https://docs.skyfire.xyz/reference/get-organization-user-by-id.md
+  - https://docs.skyfire.xyz/reference/get-organization-users.md
+  - https://docs.skyfire.xyz/reference/get-token-charges.md
+  - https://docs.skyfire.xyz/reference/introspect-token.md
+  - https://docs.skyfire.xyz/reference/set-agents-source-ip-addresses.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-active.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-inactive.md
+  - https://docs.skyfire.xyz/reference/set-organization-user-personal-data.md
+  - https://docs.skyfire.xyz/reference/update-agents-service.md
+  merge:
+    pages: 26
+    deduped: 29
+    conflicts_kept_first: 0
