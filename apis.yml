@@ -211,6 +211,8 @@ apis:
   humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
   baseURL: https://api.skyfire.xyz
   tags:
+  - Authentication
+  tags_raw:
   - Auth
   properties:
   - type: OpenAPI
@@ -243,6 +245,8 @@ apis:
   humanURL: https://docs.skyfire.xyz/reference/skyfire-apis
   baseURL: https://api.skyfire.xyz
   tags:
+  - Organization
+  tags_raw:
   - Organizations
   properties:
   - type: OpenAPI
